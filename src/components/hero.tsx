@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export function Hero() {
    return (
-      <div className="relative h-[80vh] flex items-center justify-center bg-gradient-to-r from-green-600 to-green-800 text-white">
+      <div className="relative h-[80vh] flex items-center justify-center bg-linear-to-r from-green-600 to-green-800 text-white">
          <div className="absolute inset-0 bg-black/50 w-full h-full">
             <Image
                src="/carenage.jpg"

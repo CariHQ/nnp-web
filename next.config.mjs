@@ -8,6 +8,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
    output: "export",
+   basePath: "/nnp-web",
    eslint: {
       ignoreDuringBuilds: true,
    },

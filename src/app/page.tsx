@@ -7,7 +7,7 @@ export default function Home() {
    return (
       <div>
          <Hero />
-         <MissionVision />
+         {/* <MissionVision /> */}
          {/* <PhotoGallery /> */}
          <SplitSection />
       </div>

@@ -5,10 +5,12 @@
 //   // ignore error
 // }
 
+const isProduction = process.env.NODE_ENV === "production";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
    output: "export",
-   basePath: "/nnp-web",
+   basePath: isProduction ? "/nnp-web" : "",
    eslint: {
       ignoreDuringBuilds: true,
    },
@@ -18,11 +20,11 @@ const nextConfig = {
    images: {
       unoptimized: true,
    },
-   experimental: {
-      webpackBuildWorker: true,
-      parallelServerBuildTraces: true,
-      parallelServerCompiles: true,
-   },
+   //  experimental: {
+   //     webpackBuildWorker: true,
+   //     parallelServerBuildTraces: true,
+   //     parallelServerCompiles: true,
+   //  },
 };
 
 // mergeConfig(nextConfig, userConfig);

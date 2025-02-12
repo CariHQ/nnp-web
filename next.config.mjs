@@ -11,7 +11,8 @@ const isProduction = process.env.NODE_ENV === "production";
 const nextConfig = {
    output: "export",
    basePath: isProduction ? "/nnp-web" : "",
-   assetPrefix: isProduction ? "/nnp-web" : "",
+   assetPrefix: isProduction ? "/nnp-web/" : "",
+   trailingSlash: true,
    eslint: {
       ignoreDuringBuilds: true,
    },

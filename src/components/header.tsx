@@ -1,6 +1,6 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { CustomImage } from "@/components/ui/image";
 
 export function Header() {
    return (
@@ -9,11 +9,12 @@ export function Header() {
             <Link
                href="/"
                className="text-2xl font-bold absolute z-20 border -mb-6 mt-6 md:mt-12 bg-white p-1 rounded-full w-[100px] h-[100px] md:w-[120px] md:h-[120px]">
-               <Image
-                  src={`${process.env.NEXT_PUBLIC_BASE_PATH}/nnplogo.png`}
+               <CustomImage
+                  src={`/nnplogo.png`}
                   alt="Logo"
                   width={120}
                   height={120}
+                  priority={true}
                />
             </Link>
             <div></div>

@@ -1,10 +1,13 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { useState } from "react";
 
 export function SplitSection() {
+   const [done, setDone] = useState(false);
    return (
       <section id="donate" className="grid md:grid-cols-2">
          <div className="bg-green-50 p-8 md:p-12 lg:p-16">

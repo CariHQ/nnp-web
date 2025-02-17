@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CustomImage } from "@/components/ui/image";
 
 export default function AboutPage() {
    return (
@@ -33,7 +34,7 @@ export default function AboutPage() {
                      <CardTitle>Party Leader</CardTitle>
                   </CardHeader>
                   <CardContent className="flex items-center space-x-4">
-                     <Image
+                     <CustomImage
                         src="/placeholder.svg?height=100&width=100"
                         alt="Party Leader"
                         width={100}
@@ -54,7 +55,7 @@ export default function AboutPage() {
                      <CardTitle>Deputy Leader</CardTitle>
                   </CardHeader>
                   <CardContent className="flex items-center space-x-4">
-                     <Image
+                     <CustomImage
                         src="/placeholder.svg?height=100&width=100"
                         alt="Deputy Leader"
                         width={100}

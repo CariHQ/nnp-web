@@ -17,7 +17,7 @@ export const CustomImage: React.FC<CustomImageProps> = ({
    className,
    priority,
 }) => {
-   const fullUrl = `${process.env.NEXT_PUBLIC_BASE_PATH}${src}`;
+   const fullUrl = `${src}`;
 
    return (
       <Image

@@ -3,7 +3,12 @@ import Stripe from "stripe";
 
 export async function POST(req: NextRequest) {
    try {
-      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+      const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+      if (!stripeSecretKey) {
+         throw new Error("Stripe secret key is not set");
+      }
+
+      const stripe = new Stripe(stripeSecretKey);
       const { amount } = await req.json();
       const paymentIntent = await stripe.paymentIntents.create({
          amount,

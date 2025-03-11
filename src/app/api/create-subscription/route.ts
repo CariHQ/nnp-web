@@ -3,7 +3,12 @@ import Stripe from "stripe";
 
 export async function POST(req: Request) {
    try {
-      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+      const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+      if (!stripeSecretKey) {
+         throw new Error("Stripe secret key is not set");
+      }
+
+      const stripe = new Stripe(stripeSecretKey);
       const { amount, customerId } = await req.json();
 
       // Create a subscription with the metered price

@@ -4,7 +4,12 @@ import Stripe from "stripe";
 export async function POST(request: Request) {
    try {
       const billingDetails = await request.json();
-      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+      const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+      if (!stripeSecretKey) {
+         throw new Error("Stripe secret key is not set");
+      }
+
+      const stripe = new Stripe(stripeSecretKey);
       // Create a new customer in Stripe
       const customer = await stripe.customers.create({
          name: billingDetails?.name,

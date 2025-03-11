@@ -9,12 +9,11 @@ import { handleDonation } from "@/actions/donationActions";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 
-// Load your publishable key from your environment variables
-const stripePromise = loadStripe(
-   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
-);
-
 export function DonationComponent() {
+   // Load your publishable key from your environment variables
+   const stripePromise = loadStripe(
+      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
+   );
    return (
       <Elements stripe={stripePromise}>
          <Form />

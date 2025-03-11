@@ -87,7 +87,7 @@ export default function MembershipPage() {
 
       // Proceed with sending data to Odoo
       setMembership(true);
-      // await sendToOdoo(data);
+      await sendToOdoo(data);
    };
 
    return (
@@ -546,39 +546,45 @@ export default function MembershipPage() {
 }
 
 async function sendToOdoo(data: FormData) {
-   const accessToken = "YOUR_ODOO_ACCESS_TOKEN"; // Replace with your Odoo access token
+   try {
+      const accessToken = process.env.NEXT_PUBLIC_ODOO_ACCESS_TOKEN;
+      const response = await fetch(
+         "https://new-national-party1.odoo.com/api/v1/leads",
+         {
+            method: "POST",
+            headers: {
+               "Content-Type": "application/json",
+               Authorization: `Bearer ${accessToken}`,
+            },
+            body: JSON.stringify({
+               data: {
+                  first_name: data.firstName,
+                  last_name: data.lastName,
+                  email: data.email,
+                  phone: data.phone,
+                  address: data.address,
+                  business_address: data.businessAddress,
+                  business_phone: data.businessPhone,
+                  constituency: data.constituency,
+                  membership_type: data.membershipType,
+                  city: data.city,
+                  state: data.state,
+                  zip: data.zip,
+                  political_party_member: data.politicalPartyMember,
+                  assistance_areas: data.assistanceAreas.join(", "),
+                  role: "member",
+               },
+            }),
+         }
+      );
 
-   const response = await fetch("https://your-odoo-instance.com/api/v1/leads", {
-      // Update the URL to your Odoo endpoint
-      method: "POST",
-      headers: {
-         "Content-Type": "application/json",
-         Authorization: `Bearer ${accessToken}`, // Use Bearer token for Odoo
-      },
-      body: JSON.stringify({
-         data: {
-            first_name: data.firstName,
-            last_name: data.lastName,
-            email: data.email,
-            phone: data.phone,
-            address: data.address,
-            business_address: data.businessAddress,
-            business_phone: data.businessPhone,
-            constituency: data.constituency,
-            membership_type: data.membershipType,
-            city: data.city,
-            state: data.state,
-            zip: data.zip,
-            political_party_member: data.politicalPartyMember,
-            assistance_areas: data.assistanceAreas.join(", "),
-            role: "member",
-         },
-      }),
-   });
-
-   if (!response.ok) {
-      console.error("Failed to send data to Odoo");
-   } else {
-      console.log("Data sent successfully to Odoo");
+      if (!response.ok) {
+         const errorData = await response.json();
+         console.error("Failed to send data to Odoo:", errorData);
+      } else {
+         console.log("Data sent successfully to Odoo");
+      }
+   } catch (error) {
+      console.error("Error sending data to Odoo:", error);
    }
 }

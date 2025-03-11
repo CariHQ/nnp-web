@@ -42,10 +42,9 @@ export default function AboutPage() {
                         className="rounded-full"
                      />
                      <div>
-                        <h3 className="font-semibold">Dr. Keith Mitchell</h3>
+                        <h3 className="font-semibold">Emmalin Pierre</h3>
                         <p className="text-sm text-muted-foreground">
-                           Former Prime Minister and current Leader of the
-                           Opposition
+                           Party Leader
                         </p>
                      </div>
                   </CardContent>
@@ -63,9 +62,9 @@ export default function AboutPage() {
                         className="rounded-full"
                      />
                      <div>
-                        <h3 className="font-semibold">Emmalin Pierre</h3>
+                        <h3 className="font-semibold">Norland Cox</h3>
                         <p className="text-sm text-muted-foreground">
-                           Member of Parliament for St. Andrew South East
+                           Deputy Leader
                         </p>
                      </div>
                   </CardContent>

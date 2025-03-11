@@ -1,12 +1,10 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-
 export async function POST(request: Request) {
-   const billingDetails = await request.json();
-
    try {
+      const billingDetails = await request.json();
+      const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
       // Create a new customer in Stripe
       const customer = await stripe.customers.create({
          name: billingDetails?.name,

@@ -6,9 +6,15 @@ import { Form } from "@/components/payment-form";
 const PaymentComponent = forwardRef(
    ({ setPayment, payment, amount }: any, ref: any) => {
       // Load your publishable key from your environment variables
-      const stripePromise = loadStripe(
-         process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
-      );
+      const stripePublicKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+
+      if (!stripePublicKey) {
+         console.error("Stripe publishable key is not set");
+         return null; // or handle the error appropriately
+      }
+
+      const stripePromise = loadStripe(stripePublicKey);
+
       return (
          <Elements stripe={stripePromise}>
             <Form

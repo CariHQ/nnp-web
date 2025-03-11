@@ -12,20 +12,82 @@ import {
    SelectContent,
    SelectItem,
 } from "@/components/ui/select";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { DonationComponent } from "@/components/donation-component";
+import React from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
+import PaymentComponent from "@/components/payment-component";
+
+type FormData = {
+   idNumber: string;
+   firstName: string;
+   lastName: string;
+   email: string;
+   phone: string;
+   address: string;
+   businessAddress: string;
+   businessPhone: string;
+   constituency: string;
+   membershipType: string;
+   city: string;
+   state: string;
+   zip: string;
+   politicalPartyMember: string;
+   assistanceAreas: string[];
+   signature: string;
+   date: string;
+};
+
+type BillingDetails = {
+   name: string;
+   email: string;
+   address: {
+      line1: string;
+      city: string;
+      state: string;
+      postal_code: string;
+   };
+};
 
 export default function MembershipPage() {
    const [membership, setMembership] = useState(false);
-   const [donation, setDonation] = useState(false);
+   const [payment, setPayment] = useState(false);
+   const [billingDetails, setBillingDetails] = useState<BillingDetails | null>(
+      null
+   );
+   const {
+      register,
+      handleSubmit,
+      formState: { errors },
+      setValue,
+   } = useForm<FormData>();
+   const paymentRef = useRef<any>(null); // Create a ref for the PaymentComponent
 
-   const handleMembership = (e: any) => {
-      e.preventDefault();
+   const onSubmit: SubmitHandler<FormData> = async (data) => {
+      // Set billing details
+      setBillingDetails({
+         name: `${data.firstName} ${data.lastName}`,
+         email: data.email,
+         address: {
+            line1: data.address,
+            city: data.city,
+            state: data.state,
+            postal_code: data.zip,
+         },
+      });
+
+      // Call the onSubmit method of PaymentComponent
+      if (paymentRef.current) {
+         const paymentResponse = await paymentRef.current.onSubmit();
+         if (!paymentResponse) {
+            console.error("Payment failed, not submitting the form.");
+            return; // Stop the form submission if payment fails
+         }
+      }
+
+      // Proceed with sending data to Odoo
       setMembership(true);
-   };
-
-   const handleDonation = (e: any) => {
-      e.preventDefault();
-      setDonation(true);
+      // await sendToOdoo(data);
    };
 
    return (
@@ -40,21 +102,54 @@ export default function MembershipPage() {
                         </CardTitle>
                      </CardHeader>
                      <CardContent>
-                        <form className="space-y-6" onSubmit={handleMembership}>
+                        <form
+                           className="space-y-6"
+                           onSubmit={handleSubmit(onSubmit)}>
                            <div className="grid gap-4">
                               <div className="grid gap-2">
                                  <Label htmlFor="id-number">ID Number</Label>
                                  <Input
                                     id="id-number"
                                     placeholder="Enter your ID number"
+                                    {...register("idNumber", {
+                                       required: true,
+                                    })}
                                  />
+                                 {errors.idNumber && (
+                                    <span className="text-red-500">
+                                       This field is required
+                                    </span>
+                                 )}
                               </div>
                               <div className="grid gap-2">
-                                 <Label htmlFor="name">Name (Mr./Ms.)</Label>
+                                 <Label htmlFor="firstName">First name</Label>
                                  <Input
-                                    id="name"
-                                    placeholder="Enter your full name"
+                                    id="firstName"
+                                    placeholder="Enter your first name"
+                                    {...register("firstName", {
+                                       required: true,
+                                    })}
                                  />
+                                 {errors.firstName && (
+                                    <span className="text-red-500">
+                                       This field is required
+                                    </span>
+                                 )}
+                              </div>
+                              <div className="grid gap-2">
+                                 <Label htmlFor="lastName">Last name</Label>
+                                 <Input
+                                    id="lastName"
+                                    placeholder="Enter your last name"
+                                    {...register("lastName", {
+                                       required: true,
+                                    })}
+                                 />
+                                 {errors.lastName && (
+                                    <span className="text-red-500">
+                                       This field is required
+                                    </span>
+                                 )}
                               </div>
                               <div className="grid gap-2">
                                  <Label htmlFor="home-address">
@@ -63,7 +158,13 @@ export default function MembershipPage() {
                                  <Input
                                     id="home-address"
                                     placeholder="Enter your home address"
+                                    {...register("address", { required: true })}
                                  />
+                                 {errors.address && (
+                                    <span className="text-red-500">
+                                       This field is required
+                                    </span>
+                                 )}
                               </div>
                               <div className="grid gap-2">
                                  <Label htmlFor="home-phone">
@@ -73,7 +174,13 @@ export default function MembershipPage() {
                                     id="home-phone"
                                     type="tel"
                                     placeholder="e.g., 473-123-4567"
+                                    {...register("phone", { required: true })}
                                  />
+                                 {errors.phone && (
+                                    <span className="text-red-500">
+                                       This field is required
+                                    </span>
+                                 )}
                               </div>
                               <div className="grid gap-2">
                                  <Label htmlFor="business-address">
@@ -82,7 +189,15 @@ export default function MembershipPage() {
                                  <Input
                                     id="business-address"
                                     placeholder="Enter your business address"
+                                    {...register("businessAddress", {
+                                       required: true,
+                                    })}
                                  />
+                                 {errors.businessAddress && (
+                                    <span className="text-red-500">
+                                       This field is required
+                                    </span>
+                                 )}
                               </div>
                               <div className="grid gap-2">
                                  <Label htmlFor="business-phone">
@@ -92,7 +207,15 @@ export default function MembershipPage() {
                                     id="business-phone"
                                     type="tel"
                                     placeholder="e.g., 473-765-4321"
+                                    {...register("businessPhone", {
+                                       required: true,
+                                    })}
                                  />
+                                 {errors.businessPhone && (
+                                    <span className="text-red-500">
+                                       This field is required
+                                    </span>
+                                 )}
                               </div>
 
                               <div className="grid gap-2">
@@ -101,13 +224,26 @@ export default function MembershipPage() {
                                     id="email"
                                     type="email"
                                     placeholder="Enter your email address"
+                                    {...register("email", { required: true })}
                                  />
+                                 {errors.email && (
+                                    <span className="text-red-500">
+                                       This field is required
+                                    </span>
+                                 )}
                               </div>
                               <div className="grid gap-2">
                                  <Label htmlFor="constituency">
                                     Constituency
                                  </Label>
-                                 <Select id="constituency">
+                                 <Select
+                                    {...register("constituency", {
+                                       required: true,
+                                    })}
+                                    onValueChange={(value) =>
+                                       setValue("constituency", value)
+                                    }
+                                    defaultValue="">
                                     <SelectTrigger>
                                        <SelectValue placeholder="Select your constituency" />
                                     </SelectTrigger>
@@ -159,6 +295,11 @@ export default function MembershipPage() {
                                        </SelectItem>
                                     </SelectContent>
                                  </Select>
+                                 {errors.constituency && (
+                                    <span className="text-red-500">
+                                       This field is required
+                                    </span>
+                                 )}
                               </div>
                            </div>
 
@@ -170,11 +311,19 @@ export default function MembershipPage() {
                                  defaultValue="no"
                                  className="flex gap-4 mt-2">
                                  <div className="flex items-center space-x-2">
-                                    <RadioGroupItem value="no" id="no" />
+                                    <RadioGroupItem
+                                       value="no"
+                                       id="no"
+                                       {...register("politicalPartyMember")}
+                                    />
                                     <Label htmlFor="no">No</Label>
                                  </div>
                                  <div className="flex items-center space-x-2">
-                                    <RadioGroupItem value="yes" id="yes" />
+                                    <RadioGroupItem
+                                       value="yes"
+                                       id="yes"
+                                       {...register("politicalPartyMember")}
+                                    />
                                     <Label htmlFor="yes">Yes</Label>
                                  </div>
                               </RadioGroup>
@@ -186,71 +335,119 @@ export default function MembershipPage() {
                               </Label>
                               <div className="grid grid-cols-2 gap-4 mt-2">
                                  <div className="flex items-center space-x-2">
-                                    <Checkbox id="house" />
+                                    <Checkbox
+                                       id="house"
+                                       {...register("assistanceAreas")}
+                                       value="house"
+                                    />
                                     <Label htmlFor="house">
                                        House to House Visits
                                     </Label>
                                  </div>
                                  <div className="flex items-center space-x-2">
-                                    <Checkbox id="speaking" />
+                                    <Checkbox
+                                       id="speaking"
+                                       {...register("assistanceAreas")}
+                                       value="speaking"
+                                    />
                                     <Label htmlFor="speaking">
                                        Speaking Assignments
                                     </Label>
                                  </div>
                                  <div className="flex items-center space-x-2">
-                                    <Checkbox id="campaign" />
+                                    <Checkbox
+                                       id="campaign"
+                                       {...register("assistanceAreas")}
+                                       value="campaign"
+                                    />
                                     <Label htmlFor="campaign">
                                        Campaign Activity
                                     </Label>
                                  </div>
                                  <div className="flex items-center space-x-2">
-                                    <Checkbox id="research" />
+                                    <Checkbox
+                                       id="research"
+                                       {...register("assistanceAreas")}
+                                       value="research"
+                                    />
                                     <Label htmlFor="research">
                                        Research Activities
                                     </Label>
                                  </div>
                                  <div className="flex items-center space-x-2">
-                                    <Checkbox id="youth" />
+                                    <Checkbox
+                                       id="youth"
+                                       {...register("assistanceAreas")}
+                                       value="youth"
+                                    />
                                     <Label htmlFor="youth">
-                                       Youth Orgaization
+                                       Youth Organization
                                     </Label>
                                  </div>
                                  <div className="flex items-center space-x-2">
-                                    <Checkbox id="membership" />
+                                    <Checkbox
+                                       id="membership"
+                                       {...register("assistanceAreas")}
+                                       value="membership"
+                                    />
                                     <Label htmlFor="membership">
                                        Membership Drive
                                     </Label>
                                  </div>
                                  <div className="flex items-center space-x-2">
-                                    <Checkbox id="fund" />
+                                    <Checkbox
+                                       id="fund"
+                                       {...register("assistanceAreas")}
+                                       value="fund"
+                                    />
                                     <Label htmlFor="fund">Fund Raising</Label>
                                  </div>
                                  <div className="flex items-center space-x-2">
-                                    <Checkbox id="pubilc" />
+                                    <Checkbox
+                                       id="public"
+                                       {...register("assistanceAreas")}
+                                       value="public"
+                                    />
                                     <Label htmlFor="public">
                                        Public Relations
                                     </Label>
                                  </div>
                                  <div className="flex items-center space-x-2">
-                                    <Checkbox id="branch" />
+                                    <Checkbox
+                                       id="branch"
+                                       {...register("assistanceAreas")}
+                                       value="branch"
+                                    />
                                     <Label htmlFor="branch">
                                        Branch Organization
                                     </Label>
                                  </div>
                                  <div className="flex items-center space-x-2">
-                                    <Checkbox id="enumeration" />
+                                    <Checkbox
+                                       id="enumeration"
+                                       {...register("assistanceAreas")}
+                                       value="enumeration"
+                                    />
                                     <Label htmlFor="enumeration">
                                        Enumeration
                                     </Label>
                                  </div>
                                  <div className="flex items-center space-x-2">
-                                    <Checkbox id="transportation" />
+                                    <Checkbox
+                                       id="transportation"
+                                       {...register("assistanceAreas")}
+                                       value="transportation"
+                                    />
                                     <Label htmlFor="transportation">
                                        Transportation
                                     </Label>
                                  </div>
                                  <div className="flex items-center space-x-2">
-                                    <Checkbox id="other" />
+                                    <Checkbox
+                                       id="other"
+                                       {...register("assistanceAreas")}
+                                       value="other"
+                                    />
                                     <Label htmlFor="other">Other</Label>
                                  </div>
                               </div>
@@ -264,6 +461,13 @@ export default function MembershipPage() {
                                  pay the registration fee of $5.00 and monthly
                                  membership fee of $5.00.
                               </p>
+                              <PaymentComponent
+                                 ref={paymentRef}
+                                 setPayment={setPayment}
+                                 payment={payment}
+                                 amount={5}
+                                 billingDetails={billingDetails}
+                              />
                            </div>
 
                            <div className="grid gap-4">
@@ -271,11 +475,30 @@ export default function MembershipPage() {
                                  <Label htmlFor="signature">
                                     Signature of Applicant
                                  </Label>
-                                 <Input id="signature" />
+                                 <Input
+                                    id="signature"
+                                    {...register("signature", {
+                                       required: true,
+                                    })}
+                                 />
+                                 {errors.signature && (
+                                    <span className="text-red-500">
+                                       This field is required
+                                    </span>
+                                 )}
                               </div>
                               <div className="grid gap-2">
                                  <Label htmlFor="date">Date</Label>
-                                 <Input id="date" type="date" />
+                                 <Input
+                                    id="date"
+                                    type="date"
+                                    {...register("date", { required: true })}
+                                 />
+                                 {errors.date && (
+                                    <span className="text-red-500">
+                                       This field is required
+                                    </span>
+                                 )}
                               </div>
                            </div>
 
@@ -304,63 +527,58 @@ export default function MembershipPage() {
          </div>
 
          <div className="container mx-auto px-4 py-12">
-            <Card className="max-w-3xl mx-auto ">
-               {!membership && !donation && (
+            <Card className="max-w-3xl mx-auto">
+               {!membership ? (
                   <div className="text-center py-16 px-4">
                      <h2 className="text-lg font-bold">Make a Donation</h2>
                      <p>
-                        {/* Thank you for your donation! We sincerely appreciate your support.  */}
                         Your contribution helps us further our mission and make
                         a difference in the community.
                      </p>
                   </div>
-               )}
-               {membership && !donation && (
-                  <>
-                     <CardHeader>
-                        <CardTitle>Support Our Campaign</CardTitle>
-                     </CardHeader>
-                     <CardContent>
-                        <div className="space-y-6">
-                           <form
-                              className="space-y-4"
-                              onSubmit={handleDonation}>
-                              <div className="grid grid-cols-2 gap-4">
-                                 <Button variant="outline" className="h-24">
-                                    One-Time Donation
-                                 </Button>
-                                 <Button variant="outline" className="h-24">
-                                    Monthly Support
-                                 </Button>
-                              </div>
-                              <div>
-                                 <Label htmlFor="amount">Amount</Label>
-                                 <Input
-                                    id="amount"
-                                    type="number"
-                                    placeholder="Enter amount"
-                                 />
-                              </div>
-                              <Button type="submit" className="w-full">
-                                 Proceed to Payment
-                              </Button>
-                           </form>
-                        </div>
-                     </CardContent>
-                  </>
-               )}
-               {membership && donation && (
-                  <div className="text-center py-16 px-4">
-                     <h2 className="text-lg font-bold">Donation received!</h2>
-                     <p>
-                        Thank you for your donation! We sincerely appreciate
-                        your support. Your contribution helps us further our
-                        mission and make a difference in the community.
-                     </p>
-                  </div>
+               ) : (
+                  <DonationComponent />
                )}
             </Card>
          </div>
       </>
    );
+}
+
+async function sendToOdoo(data: FormData) {
+   const accessToken = "YOUR_ODOO_ACCESS_TOKEN"; // Replace with your Odoo access token
+
+   const response = await fetch("https://your-odoo-instance.com/api/v1/leads", {
+      // Update the URL to your Odoo endpoint
+      method: "POST",
+      headers: {
+         "Content-Type": "application/json",
+         Authorization: `Bearer ${accessToken}`, // Use Bearer token for Odoo
+      },
+      body: JSON.stringify({
+         data: {
+            first_name: data.firstName,
+            last_name: data.lastName,
+            email: data.email,
+            phone: data.phone,
+            address: data.address,
+            business_address: data.businessAddress,
+            business_phone: data.businessPhone,
+            constituency: data.constituency,
+            membership_type: data.membershipType,
+            city: data.city,
+            state: data.state,
+            zip: data.zip,
+            political_party_member: data.politicalPartyMember,
+            assistance_areas: data.assistanceAreas.join(", "),
+            role: "member",
+         },
+      }),
+   });
+
+   if (!response.ok) {
+      console.error("Failed to send data to Odoo");
+   } else {
+      console.log("Data sent successfully to Odoo");
+   }
 }

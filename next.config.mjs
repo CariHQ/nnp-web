@@ -1,10 +1,10 @@
-const isProduction = process.env.NEXT_PUBLIC_NODE_ENV === "production";
+// const isProduction = process.env.NEXT_PUBLIC_NODE_ENV === "production";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
    output: "export",
-   basePath: isProduction ? "/nnp-web" : "",
-   assetPrefix: isProduction ? "/nnp-web/" : "",
+   basePath: "",
+   assetPrefix: "",
    trailingSlash: true,
    eslint: {
       ignoreDuringBuilds: true,

@@ -16,6 +16,9 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     
     steps:
       - name: Checkout code
@@ -29,6 +32,8 @@ jobs:
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
 
       - name: Enable Artifact Registry API
         run: |

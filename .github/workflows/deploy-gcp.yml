@@ -32,13 +32,8 @@ jobs:
           gcloud auth configure-docker
 
       - name: Build and push Docker image
-        env:
-          TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
-          TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
         run: |
           docker build \
-            --build-arg TURSO_DATABASE_URL="$TURSO_DATABASE_URL" \
-            --build-arg TURSO_AUTH_TOKEN="$TURSO_AUTH_TOKEN" \
             -t gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA \
             -t gcr.io/$PROJECT_ID/$SERVICE_NAME:latest .
           docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA
@@ -63,6 +58,7 @@ jobs:
             --set-env-vars NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=${{ vars.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }} \
             --set-env-vars NEXT_PUBLIC_ODOO_ACCESS_TOKEN=${{ vars.NEXT_PUBLIC_ODOO_ACCESS_TOKEN }} \
             --set-env-vars STRIPE_SECRET_KEY=${{ vars.STRIPE_SECRET_KEY }} \
+            --set-env-vars STRIPE_WEBHOOK_SECRET=${{ secrets.STRIPE_WEBHOOK_SECRET }} \
             --set-env-vars STRIPE_METERED_PRICE_ID=${{ vars.STRIPE_METERED_PRICE_ID }} \
             --set-env-vars AUTH_SECRET=${{ secrets.AUTH_SECRET }}
 

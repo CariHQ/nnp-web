@@ -2,13 +2,15 @@ import { drizzle } from 'drizzle-orm/libsql'
 import { createClient } from '@libsql/client'
 import * as schema from './schema'
 
-const isProduction = process.env.NODE_ENV === 'production'
+// For Cloud Run or production with Turso URL, use Turso
+// Otherwise use local SQLite for development
+const useTurso = process.env.TURSO_DATABASE_URL && process.env.TURSO_DATABASE_URL.startsWith('libsql://')
 
 const client = createClient({
-  url: isProduction && process.env.TURSO_DATABASE_URL 
-    ? process.env.TURSO_DATABASE_URL 
+  url: useTurso 
+    ? process.env.TURSO_DATABASE_URL!
     : 'file:./local.db',
-  authToken: isProduction && process.env.TURSO_AUTH_TOKEN 
+  authToken: useTurso && process.env.TURSO_AUTH_TOKEN 
     ? process.env.TURSO_AUTH_TOKEN 
     : undefined,
 })

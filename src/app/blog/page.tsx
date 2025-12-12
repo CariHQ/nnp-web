@@ -1,6 +1,6 @@
 import { db } from '@/lib/db'
 import { blogPosts } from '@/lib/db/schema'
-import { eq, desc, sql } from 'drizzle-orm'
+import { eq } from 'drizzle-orm'
 import Link from 'next/link'
 import Image from 'next/image'
 

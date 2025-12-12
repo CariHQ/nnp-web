@@ -73,7 +73,7 @@ export default function NewBlogPostPage() {
             <Link href="/admin/blog">
               <Button variant="outline">← Back</Button>
             </Link>
-            <h1 className="text-2xl font-bold">Add New Blog Post</h1>
+            <h1 className="text-2xl font-bold">Add New Press Release</h1>
           </div>
         </div>
       </header>
@@ -159,7 +159,7 @@ export default function NewBlogPostPage() {
 
           <div className="flex gap-4">
             <Button type="submit" disabled={loading}>
-              {loading ? 'Creating...' : 'Create Post'}
+              {loading ? 'Creating...' : 'Create Release'}
             </Button>
             <Link href="/admin/blog">
               <Button type="button" variant="outline">

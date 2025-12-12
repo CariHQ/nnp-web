@@ -77,10 +77,10 @@ export default function BlogPage() {
             <Link href="/admin">
               <Button variant="outline">← Back</Button>
             </Link>
-            <h1 className="text-2xl font-bold">Blog Posts</h1>
+            <h1 className="text-2xl font-bold">Press Releases</h1>
           </div>
           <Link href="/admin/blog/new">
-            <Button>Add New Post</Button>
+            <Button>Add New Release</Button>
           </Link>
         </div>
       </header>
@@ -91,7 +91,7 @@ export default function BlogPage() {
         ) : posts.length === 0 ? (
           <Card>
             <CardContent className="py-8 text-center text-gray-500">
-              No blog posts found. Add your first post!
+              No press releases found. Add your first release!
             </CardContent>
           </Card>
         ) : (

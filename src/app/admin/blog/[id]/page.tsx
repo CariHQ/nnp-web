@@ -103,7 +103,7 @@ export default function EditBlogPostPage() {
             <Link href="/admin/blog">
               <Button variant="outline">← Back</Button>
             </Link>
-            <h1 className="text-2xl font-bold">Edit Blog Post</h1>
+            <h1 className="text-2xl font-bold">Edit Press Release</h1>
           </div>
         </div>
       </header>

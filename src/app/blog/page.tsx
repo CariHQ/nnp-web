@@ -23,11 +23,11 @@ export default async function BlogPage() {
   return (
     <div className="min-h-screen bg-white">
       <div className="container mx-auto px-4 py-16">
-        <h1 className="text-4xl font-bold mb-8">Blog</h1>
+        <h1 className="text-4xl font-bold mb-8">Press</h1>
         
         {posts.length === 0 ? (
           <div className="text-center py-16">
-            <p className="text-gray-500">No blog posts yet. Check back soon!</p>
+            <p className="text-gray-500">No press releases yet. Check back soon!</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

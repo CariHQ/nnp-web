@@ -3,7 +3,7 @@ import { db } from '@/lib/db'
 import { pageContent } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
 
-export const dynamic = 'force-static'
+export const dynamic = 'force-dynamic'
 
 // Required for static export - return empty array to skip API routes
 export function generateStaticParams() {

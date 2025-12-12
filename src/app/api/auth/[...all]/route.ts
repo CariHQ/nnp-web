@@ -1,6 +1,13 @@
+// For Cloud Run (standalone), use dynamic rendering
+// For static export, use force-static
+export const dynamic = 'force-dynamic'
+
 // Required for static export - catch-all routes need to return array of objects
-export const dynamic = 'force-static'
 export function generateStaticParams() {
+  if (process.env.CLOUD_RUN === 'true') {
+    // Not needed for standalone/dynamic
+    return []
+  }
   return [{ all: [] }]
 }
 

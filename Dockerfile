@@ -43,10 +43,13 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Copy necessary files
+# Copy necessary files from standalone build
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
+
+# Ensure the server.js file exists (standalone build creates it)
+RUN test -f server.js || (echo "Error: server.js not found in standalone build" && exit 1)
 
 USER nextjs
 

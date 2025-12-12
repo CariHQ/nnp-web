@@ -5,11 +5,22 @@ import { db } from '@/lib/db'
 import { stripePayments } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-02-24.acacia',
-})
+// Lazy initialization to avoid build-time errors
+function getStripe() {
+  if (!process.env.STRIPE_SECRET_KEY) {
+    throw new Error('STRIPE_SECRET_KEY is not configured')
+  }
+  return new Stripe(process.env.STRIPE_SECRET_KEY, {
+    apiVersion: '2025-02-24.acacia',
+  })
+}
 
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
+function getWebhookSecret() {
+  if (!process.env.STRIPE_WEBHOOK_SECRET) {
+    throw new Error('STRIPE_WEBHOOK_SECRET is not configured')
+  }
+  return process.env.STRIPE_WEBHOOK_SECRET
+}
 
 export async function POST(req: Request) {
   const body = await req.text()
@@ -18,6 +29,8 @@ export async function POST(req: Request) {
   let event: Stripe.Event
 
   try {
+    const stripe = getStripe()
+    const webhookSecret = getWebhookSecret()
     event = stripe.webhooks.constructEvent(body, signature, webhookSecret)
   } catch (err: any) {
     console.error('Webhook signature verification failed:', err.message)

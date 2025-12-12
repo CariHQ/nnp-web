@@ -32,9 +32,23 @@ export default async function PressPage() {
 
   return (
     <div className="min-h-screen bg-white">
+      {/* Hero Section */}
+      <div className="relative h-[40vh] w-full overflow-hidden -mt-24">
+        <Image
+          src="/hero/grenada-city.jpg"
+          alt="Press Releases"
+          fill
+          className="object-cover"
+          priority
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute inset-0 flex items-center justify-center text-white">
+          <h1 className="text-4xl md:text-5xl font-bold">Press</h1>
+        </div>
+      </div>
+
       <div className="container mx-auto px-4 py-16">
-        <h1 className="text-2xl md:text-3xl font-bold mb-6">Press</h1>
-        
         {posts.length === 0 ? (
           <div className="text-center py-16">
             <p className="text-gray-500">No press releases yet. Check back soon!</p>

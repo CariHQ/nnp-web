@@ -28,20 +28,24 @@ jobs:
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
+      - name: Verify authentication
+        run: |
+          gcloud auth list
+          gcloud config get-value project
+
       - name: Enable Artifact Registry API
         run: |
           gcloud services enable artifactregistry.googleapis.com --quiet || true
 
       - name: Create Artifact Registry repository if it doesn't exist
         run: |
-          gcloud artifacts repositories describe $REPOSITORY \
-            --location=$REGION \
-            --format="value(name)" || \
-          gcloud artifacts repositories create $REPOSITORY \
-            --repository-format=docker \
-            --location=$REGION \
-            --description="Docker repository for NNP Web" \
-            --quiet
+          if ! gcloud artifacts repositories describe $REPOSITORY --location=$REGION --format="value(name)" 2>/dev/null; then
+            gcloud artifacts repositories create $REPOSITORY \
+              --repository-format=docker \
+              --location=$REGION \
+              --description="Docker repository for NNP Web" \
+              --quiet
+          fi
 
       - name: Authenticate Docker to Artifact Registry
         run: |

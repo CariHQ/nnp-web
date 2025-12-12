@@ -22,6 +22,11 @@ ENV NODE_ENV=production
 ENV CLOUD_RUN=true
 
 # Generate static data and build (Cloud Run uses standalone output)
+# Pass Turso credentials as build args for static data generation
+ARG TURSO_DATABASE_URL
+ARG TURSO_AUTH_TOKEN
+ENV TURSO_DATABASE_URL=$TURSO_DATABASE_URL
+ENV TURSO_AUTH_TOKEN=$TURSO_AUTH_TOKEN
 RUN CLOUD_RUN=true npm run generate-static-data
 RUN CLOUD_RUN=true npm run build
 

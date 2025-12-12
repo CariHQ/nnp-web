@@ -35,7 +35,7 @@ export default async function PressPage() {
       {/* Hero Section */}
       <div className="relative h-[40vh] w-full overflow-hidden -mt-24">
         <Image
-          src="/hero/community-gathering.jpg"
+          src="/hero/grenada-landscape.jpg"
           alt="Press Releases"
           fill
           className="object-cover"

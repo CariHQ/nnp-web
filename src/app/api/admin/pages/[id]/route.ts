@@ -5,11 +5,6 @@ import { eq } from 'drizzle-orm'
 
 export const dynamic = 'force-dynamic'
 
-// Required for static export - return empty array to skip API routes
-export function generateStaticParams() {
-  return []
-}
-
 export async function PATCH(
   req: Request,
   { params }: { params: Promise<{ id: string }> }

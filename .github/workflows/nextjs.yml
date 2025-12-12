@@ -73,6 +73,12 @@ jobs:
                  ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-
          - name: Install dependencies
            run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
+         - name: Generate static data
+           env:
+              TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
+              TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+              NODE_ENV: production
+           run: ${{ steps.detect-package-manager.outputs.runner }} npm run generate-static-data
          - name: Build with Next.js
            env:
               NEXT_PUBLIC_NODE_ENV: ${{ vars.NEXT_PUBLIC_NODE_ENV }}

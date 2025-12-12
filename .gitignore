@@ -47,4 +47,5 @@ certificates
 # Payload CMS
 payload.db
 payload.db-journal
-payload-types.ts
+payload-types.tskey.json
+.gcp-project-id

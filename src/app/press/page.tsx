@@ -19,12 +19,11 @@ export default async function PressPage() {
     posts = allPosts.sort((a, b) => {
       const aDate = a.publishedAt || a.createdAt
       const bDate = b.publishedAt || b.createdAt
-      return (bDate || 0) - (aDate || 0)
-    }).map(post => ({
-      ...post,
-      // Ensure we use publishedAt if available, not createdAt
-      publishedAt: post.publishedAt || null
-    }))
+      // Handle both Date objects and Unix timestamps (numbers)
+      const aTimestamp = aDate instanceof Date ? aDate.getTime() : (aDate || 0) * 1000
+      const bTimestamp = bDate instanceof Date ? bDate.getTime() : (bDate || 0) * 1000
+      return bTimestamp - aTimestamp
+    })
   } catch (error) {
     console.error('Error fetching press releases:', error)
     // Return empty array if query fails

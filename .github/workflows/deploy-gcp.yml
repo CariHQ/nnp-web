@@ -30,23 +30,15 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           export_default_credentials: true
 
-      - name: Authenticate gcloud
-        run: |
-          gcloud auth activate-service-account --key-file=${{ steps.auth.outputs.credentials_file_path }} || \
-          gcloud auth login --cred-file=${{ steps.auth.outputs.credentials_file_path }} || \
-          echo "Using Workload Identity credentials"
-
       - name: Enable Artifact Registry API
         run: |
           gcloud services enable artifactregistry.googleapis.com --quiet || true
 
-      - name: Verify repository exists (skip creation - already exists)
-        run: |
-          gcloud artifacts repositories describe $REPOSITORY --location=$REGION --format="value(name)" || echo "Repository check skipped"
-
       - name: Authenticate Docker to Artifact Registry
         run: |
           gcloud auth configure-docker $REGION-docker.pkg.dev --quiet
+          # Get access token and login to Docker
+          gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin $REGION-docker.pkg.dev
 
       - name: Build and push Docker image
         run: |

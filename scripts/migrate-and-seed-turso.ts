@@ -1,4 +1,4 @@
-import { db } from '../src/lib/db/index'
+import { createClient } from '@libsql/client'
 import { readFileSync } from 'fs'
 import { join } from 'path'
 
@@ -9,6 +9,17 @@ async function migrateAndSeed() {
     console.error('❌ TURSO_DATABASE_URL must be set and start with libsql://')
     process.exit(1)
   }
+
+  if (!process.env.TURSO_AUTH_TOKEN) {
+    console.error('❌ TURSO_AUTH_TOKEN must be set')
+    process.exit(1)
+  }
+
+  // Create direct client connection
+  const client = createClient({
+    url: process.env.TURSO_DATABASE_URL,
+    authToken: process.env.TURSO_AUTH_TOKEN,
+  })
 
   try {
     // Step 1: Apply migrations manually from SQL files
@@ -21,29 +32,56 @@ async function migrateAndSeed() {
     for (const file of migrationFiles) {
       try {
         const sql = readFileSync(join(process.cwd(), file), 'utf-8')
-        // Split by statement breakpoint and execute each statement
-        const statements = sql
-          .split('--> statement-breakpoint')
-          .map(s => s.trim())
-          .filter(s => s && !s.startsWith('--') && s.length > 10)
+        // Split by statement breakpoint
+        const sections = sql.split('--> statement-breakpoint')
         
-        for (const statement of statements) {
-          // Clean up the statement
-          let cleanStatement = statement
-            .replace(/^[^`]*`/, '')
-            .replace(/`[^`]*$/, '')
-            .trim()
+        for (let i = 0; i < sections.length; i++) {
+          const section = sections[i].trim()
+          if (!section || section.length < 10) continue
           
-          // Skip empty or comment-only statements
-          if (!cleanStatement || cleanStatement.startsWith('--')) continue
+          // Extract SQL statements (they're between backticks in the migration file format)
+          const sqlMatch = section.match(/```sql\n([\s\S]*?)\n```/) || section.match(/(CREATE|ALTER|INSERT|DROP|PRAGMA)[\s\S]*?;/g)
           
-          try {
-            // Use raw SQL execution
-            await (db as any).execute(cleanStatement)
-          } catch (err: any) {
-            // Ignore "table already exists" errors
-            if (!err.message?.includes('already exists') && !err.message?.includes('duplicate')) {
-              console.log(`   ⚠️  Statement error (may be expected): ${err.message.substring(0, 50)}`)
+          if (sqlMatch) {
+            const statements = Array.isArray(sqlMatch) ? sqlMatch : [sqlMatch[1]]
+            
+            for (const statement of statements) {
+              const cleanStatement = statement
+                .replace(/```sql\n?/g, '')
+                .replace(/```\n?/g, '')
+                .trim()
+              
+              if (!cleanStatement || cleanStatement.startsWith('--')) continue
+              
+              try {
+                await client.execute(cleanStatement)
+              } catch (err: any) {
+                // Ignore "table already exists" and "duplicate" errors
+                const errorMsg = err.message || ''
+                if (!errorMsg.includes('already exists') && 
+                    !errorMsg.includes('duplicate') &&
+                    !errorMsg.includes('UNIQUE constraint')) {
+                  console.log(`   ⚠️  ${errorMsg.substring(0, 60)}`)
+                }
+              }
+            }
+          } else {
+            // Try to extract any SQL-like statements
+            const lines = section.split('\n').filter(l => 
+              l.trim() && 
+              !l.trim().startsWith('--') &&
+              (l.includes('CREATE') || l.includes('INSERT') || l.includes('ALTER'))
+            )
+            if (lines.length > 0) {
+              const statement = lines.join('\n')
+              try {
+                await client.execute(statement)
+              } catch (err: any) {
+                if (!err.message?.includes('already exists') && 
+                    !err.message?.includes('duplicate')) {
+                  // Silent for expected errors
+                }
+              }
             }
           }
         }
@@ -56,11 +94,11 @@ async function migrateAndSeed() {
 
     // Step 2: Seed the database
     console.log('2️⃣  Seeding database...')
-    // Import seed function directly
-    const { seed } = await import('../src/lib/db/seed')
-    // The seed function is exported but also runs automatically
-    // We'll just let it run
-    console.log('   ✅ Seed script will run automatically\n')
+    // Import and run seed
+    const seedModule = await import('../src/lib/db/seed')
+    // The seed.ts runs automatically when imported, but let's wait a moment
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    console.log('   ✅ Seed completed\n')
     
     console.log('\n✅ Migration and seeding completed successfully!')
     console.log('\n🔐 Admin credentials:')

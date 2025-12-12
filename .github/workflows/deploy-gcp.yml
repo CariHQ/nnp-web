@@ -27,11 +27,13 @@ jobs:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
           project_id: ${{ secrets.GCP_PROJECT_ID }}
+          export_default_credentials: true
 
       - name: Verify authentication
         run: |
           gcloud auth list
           gcloud config get-value project
+          gcloud config get-value account
 
       - name: Enable Artifact Registry API
         run: |

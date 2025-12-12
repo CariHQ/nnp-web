@@ -29,7 +29,7 @@ jobs:
 
       - name: Authenticate Docker to GCR
         run: |
-          gcloud auth configure-docker --quiet
+          gcloud auth configure-docker gcr.io --quiet
 
       - name: Build and push Docker image
         run: |

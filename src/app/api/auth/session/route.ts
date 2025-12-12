@@ -6,9 +6,9 @@ export async function GET() {
   const session = await getSession()
   
   if (!session) {
-    return NextResponse.json({ session: null })
+    return NextResponse.json({ authenticated: false, session: null })
   }
 
-  return NextResponse.json({ session })
+  return NextResponse.json({ authenticated: true, session })
 }
 

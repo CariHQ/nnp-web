@@ -1,16 +1,51 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import Link from 'next/link'
 
 export default function AdminDashboard() {
   const router = useRouter()
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    // Check if user is authenticated
+    const checkAuth = async () => {
+      try {
+        const res = await fetch('/api/auth/session')
+        if (!res.ok) {
+          router.push('/admin/login')
+          return
+        }
+        const data = await res.json()
+        if (!data.authenticated) {
+          router.push('/admin/login')
+          return
+        }
+      } catch (error) {
+        router.push('/admin/login')
+      } finally {
+        setLoading(false)
+      }
+    }
+    checkAuth()
+  }, [router])
 
   const handleSignOut = async () => {
     await fetch('/api/auth/logout', { method: 'POST' })
     router.push('/admin/login')
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
   }
 
   return (

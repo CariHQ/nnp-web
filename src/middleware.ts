@@ -1,10 +1,36 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { jwtVerify } from 'jose'
 
-// Middleware doesn't work in static export, so we'll skip it during build
-// Admin routes will be handled client-side in static builds
+const secret = new TextEncoder().encode(process.env.AUTH_SECRET || 'default-secret-key')
+
 export async function middleware(request: NextRequest) {
-  // In static export, middleware is not executed, so just pass through
+  const { pathname } = request.nextUrl
+
+  // Protect admin routes
+  if (pathname.startsWith('/admin')) {
+    // Allow access to login page
+    if (pathname === '/admin/login' || pathname.startsWith('/admin/login/')) {
+      return NextResponse.next()
+    }
+
+    const token = request.cookies.get('auth-token')
+    
+    if (!token) {
+      const loginUrl = new URL('/admin/login', request.url)
+      return NextResponse.redirect(loginUrl)
+    }
+
+    try {
+      await jwtVerify(token.value, secret)
+      return NextResponse.next()
+    } catch (error) {
+      // Invalid or expired token - redirect to login
+      const loginUrl = new URL('/admin/login', request.url)
+      return NextResponse.redirect(loginUrl)
+    }
+  }
+
   return NextResponse.next()
 }
 

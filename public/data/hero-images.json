@@ -1,0 +1,81 @@
+{
+  "images": [
+    {
+      "id": 3,
+      "title": "Empowering Communities",
+      "imageUrl": "/hero/community-gathering.jpg",
+      "caption": "Working together for a stronger Grenada",
+      "link": "/about",
+      "order": 0,
+      "active": true,
+      "createdAt": "2025-12-12T12:52:13.000Z",
+      "updatedAt": "2025-12-12T12:52:13.000Z"
+    },
+    {
+      "id": 4,
+      "title": "Beautiful Grenada",
+      "imageUrl": "/hero/grenada-landscape.jpg",
+      "caption": "Discover the beauty of our nation",
+      "link": "/about",
+      "order": 1,
+      "active": true,
+      "createdAt": "2025-12-12T12:52:13.000Z",
+      "updatedAt": "2025-12-12T12:52:13.000Z"
+    },
+    {
+      "id": 5,
+      "title": "Grenada City",
+      "imageUrl": "/hero/grenada-city.jpg",
+      "caption": "Building a modern Grenada",
+      "link": "/about",
+      "order": 2,
+      "active": true,
+      "createdAt": "2025-12-12T12:52:13.000Z",
+      "updatedAt": "2025-12-12T12:52:13.000Z"
+    },
+    {
+      "id": 6,
+      "title": "Port Louise Marina",
+      "imageUrl": "/hero/port-louise-marina-1.jpg",
+      "caption": "Economic development and growth",
+      "link": "/about",
+      "order": 3,
+      "active": true,
+      "createdAt": "2025-12-12T12:52:13.000Z",
+      "updatedAt": "2025-12-12T12:52:13.000Z"
+    },
+    {
+      "id": 7,
+      "title": "Marina Development",
+      "imageUrl": "/hero/port-louise-marina-2.jpg",
+      "caption": "Sustainable infrastructure",
+      "link": "/about",
+      "order": 4,
+      "active": true,
+      "createdAt": "2025-12-12T12:52:13.000Z",
+      "updatedAt": "2025-12-12T12:52:13.000Z"
+    },
+    {
+      "id": 8,
+      "title": "Our Progress",
+      "imageUrl": "/hero/development-1.jpg",
+      "caption": "Building a better future",
+      "link": "/about",
+      "order": 5,
+      "active": true,
+      "createdAt": "2025-12-12T12:52:13.000Z",
+      "updatedAt": "2025-12-12T12:52:13.000Z"
+    },
+    {
+      "id": 9,
+      "title": "Community Development",
+      "imageUrl": "/hero/development-2.jpg",
+      "caption": "Strengthening our communities",
+      "link": "/about",
+      "order": 6,
+      "active": true,
+      "createdAt": "2025-12-12T12:52:13.000Z",
+      "updatedAt": "2025-12-12T12:52:13.000Z"
+    }
+  ]
+}

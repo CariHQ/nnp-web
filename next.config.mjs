@@ -9,6 +9,10 @@ const nextConfig = {
    assetPrefix: basePath,
    trailingSlash: true,
    output: (isProduction || isGitHubPages) ? 'export' : undefined,
+   // Exclude admin routes from static export (they require auth and API routes)
+   generateBuildId: async () => {
+     return 'static-build'
+   },
    eslint: {
       ignoreDuringBuilds: true,
    },

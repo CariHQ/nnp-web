@@ -1,6 +1,6 @@
 // Required for static export - catch-all routes need to return array of objects
 export const dynamic = 'force-static'
-export async function generateStaticParams() {
+export function generateStaticParams() {
   return [{ all: [] }]
 }
 

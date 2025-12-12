@@ -1,15 +1,30 @@
 const fs = require('fs');
 const path = require('path');
 
-// Remove API routes before static export since they can't be statically exported
+// Temporarily move API routes and admin routes out of app directory for static export
 const apiDir = path.join(process.cwd(), 'src', 'app', 'api');
+const adminDir = path.join(process.cwd(), 'src', 'app', 'admin');
+const tempApiDir = path.join(process.cwd(), 'src', '_api_temp');
+const tempAdminDir = path.join(process.cwd(), 'src', '_admin_temp');
 
-if (fs.existsSync(apiDir)) {
-  console.log('Removing API routes for static export...');
-  // We'll rename the directory so Next.js doesn't try to build it
-  // But actually, we should just let Next.js skip it during export
-  // The issue is dynamic routes need generateStaticParams
-  console.log('API routes will be skipped during static export');
+if (process.env.NODE_ENV === 'production') {
+  if (fs.existsSync(apiDir)) {
+    console.log('Moving API routes out of app directory for static export...');
+    if (fs.existsSync(tempApiDir)) {
+      fs.rmSync(tempApiDir, { recursive: true, force: true });
+    }
+    fs.renameSync(apiDir, tempApiDir);
+    console.log('API routes moved to temporary location');
+  }
+  
+  if (fs.existsSync(adminDir)) {
+    console.log('Moving admin routes out of app directory for static export...');
+    if (fs.existsSync(tempAdminDir)) {
+      fs.rmSync(tempAdminDir, { recursive: true, force: true });
+    }
+    fs.renameSync(adminDir, tempAdminDir);
+    console.log('Admin routes moved to temporary location');
+  }
 }
 
 console.log('Pre-build script completed');

@@ -67,6 +67,20 @@ export function AdminDashboardClient() {
               </CardContent>
             </Card>
           </Link>
+
+          <Link href="/admin/blog">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+              <CardHeader>
+                <CardTitle>Blog Posts</CardTitle>
+                <CardDescription>Manage blog articles</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-gray-600">
+                  Create and manage blog posts with images
+                </p>
+              </CardContent>
+            </Card>
+          </Link>
         </div>
       </main>
     </div>

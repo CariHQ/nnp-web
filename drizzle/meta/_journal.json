@@ -15,6 +15,13 @@
       "when": 1765533703467,
       "tag": "0001_pink_starfox",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1765560441358,
+      "tag": "0002_flat_magdalene",
+      "breakpoints": true
     }
   ]
 }

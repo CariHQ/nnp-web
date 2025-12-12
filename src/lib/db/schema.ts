@@ -72,6 +72,21 @@ export const pageContent = sqliteTable('page_content', {
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(strftime('%s', 'now'))`),
 })
 
+// Blog posts
+export const blogPosts = sqliteTable('blog_posts', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  title: text('title').notNull(),
+  slug: text('slug').notNull().unique(),
+  headerImage: text('header_image'),
+  excerpt: text('excerpt'), // Short description/preview
+  content: text('content').notNull(), // Main blog post content (markdown or HTML)
+  author: text('author'),
+  published: integer('published', { mode: 'boolean' }).notNull().default(false),
+  publishedAt: integer('published_at', { mode: 'timestamp' }),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(strftime('%s', 'now'))`),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(strftime('%s', 'now'))`),
+})
+
 export type User = typeof users.$inferSelect
 export type NewUser = typeof users.$inferInsert
 export type HeroImage = typeof heroImages.$inferSelect
@@ -80,3 +95,5 @@ export type StripePayment = typeof stripePayments.$inferSelect
 export type NewStripePayment = typeof stripePayments.$inferInsert
 export type PageContent = typeof pageContent.$inferSelect
 export type NewPageContent = typeof pageContent.$inferInsert
+export type BlogPost = typeof blogPosts.$inferSelect
+export type NewBlogPost = typeof blogPosts.$inferInsert

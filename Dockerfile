@@ -24,7 +24,8 @@ ENV CLOUD_RUN=true
 # Build Next.js app (Cloud Run uses standalone output)
 # For Cloud Run, we don't need to generate static data - app queries DB at runtime
 # We also don't need pre-build/post-build scripts (those are for static export)
-RUN CLOUD_RUN=true next build
+# Use npx to ensure next is found in node_modules/.bin
+RUN CLOUD_RUN=true npx next build
 
 # Production image, copy all the files and run next
 FROM base AS runner

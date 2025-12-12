@@ -1,11 +1,8 @@
-// const isProduction = process.env.NEXT_PUBLIC_NODE_ENV === "production";
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-   output: "export",
    basePath: "",
    assetPrefix: "",
-   trailingSlash: true,
+   trailingSlash: false,
    eslint: {
       ignoreDuringBuilds: true,
    },
@@ -13,7 +10,16 @@ const nextConfig = {
       ignoreBuildErrors: true,
    },
    images: {
-      unoptimized: true,
+      remotePatterns: [
+         {
+            protocol: 'https',
+            hostname: '**',
+         },
+         {
+            protocol: 'http',
+            hostname: 'localhost',
+         },
+      ],
    },
    experimental: {
       webpackBuildWorker: true,

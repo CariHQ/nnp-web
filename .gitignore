@@ -43,3 +43,8 @@ next-env.d.ts
 .DS_Store
 
 certificates
+
+# Payload CMS
+payload.db
+payload.db-journal
+payload-types.ts

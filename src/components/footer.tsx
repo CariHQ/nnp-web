@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export function Footer() {
    return (
-      <footer className="bg-green-900 text-white">
+      <footer className="bg-white text-gray-900">
          <div className="container mx-auto px-4 py-12">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                <div>
@@ -10,7 +10,7 @@ export function Footer() {
                   <address className="not-italic">
                      <p>The New National Party</p>
                      <p>St. George's, Grenada</p>
-                     <p>Email: info@nnp.gd</p>
+                     <p>Email: info@votenpp.com</p>
                      <p>Phone: +1 473-440-1875</p>
                   </address>
                </div>
@@ -65,7 +65,7 @@ export function Footer() {
                   </ul>
                </div>
             </div>
-            <div className="mt-8 pt-8 border-t border-green-800 text-center">
+            <div className="mt-8 pt-8">
                <p>
                   &copy; {new Date().getFullYear()} The New National Party. All
                   rights reserved.

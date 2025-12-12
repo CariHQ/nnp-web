@@ -1,6 +1,5 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,13 +7,13 @@ import { DonationComponent } from "@/components/donation-component";
 
 export function SplitSection() {
    return (
-      <section id="donate" className="grid md:grid-cols-2">
-         <div className="bg-green-50 p-8 md:p-12 lg:p-16">
-            <Card>
-               <CardHeader>
-                  <CardTitle>Volunteer With Us</CardTitle>
-               </CardHeader>
-               <CardContent>
+      <section id="donate" className="grid md:grid-cols-2 bg-white">
+         <div className="bg-white p-8 md:p-12">
+            <div>
+               <div className="mb-6">
+                  <h2 className="text-xl font-bold">Volunteer With Us</h2>
+               </div>
+               <div>
                   <form className="space-y-4">
                      <div>
                         <Label htmlFor="name">Full Name</Label>
@@ -49,13 +48,11 @@ export function SplitSection() {
                         Submit
                      </Button>
                   </form>
-               </CardContent>
-            </Card>
+               </div>
+            </div>
          </div>
-         <div className="bg-green-100 p-8 md:p-12 lg:p-16">
-            <Card>
-               <DonationComponent />
-            </Card>
+         <div className="bg-white p-8 md:p-12">
+            <DonationComponent />
          </div>
       </section>
    );

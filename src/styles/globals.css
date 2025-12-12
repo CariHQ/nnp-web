@@ -73,8 +73,8 @@
       --popover: 0 0% 100%;
       --popover-foreground: 222.2 84% 4.9%;
 
-      --primary: 142.1 76.2% 36.3%;
-      --primary-foreground: 355.7 100% 97.3%;
+      --primary: 142 69% 19%;
+      --primary-foreground: 0 0% 100%;
 
       --secondary: 142.1 76.2% 96.3%;
       --secondary-foreground: 142.1 76.2% 36.3%;
@@ -105,8 +105,8 @@
       --popover: 222.2 84% 4.9%;
       --popover-foreground: 210 40% 98%;
 
-      --primary: 142.1 76.2% 36.3%;
-      --primary-foreground: 355.7 100% 97.3%;
+      --primary: 142 76% 20%;
+      --primary-foreground: 0 0% 100%;
 
       --secondary: 217.2 32.6% 17.5%;
       --secondary-foreground: 210 40% 98%;

@@ -1,6 +1,5 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,6 +16,7 @@ import { DonationComponent } from "@/components/donation-component";
 import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import PaymentComponent from "@/components/payment-component";
+import Image from "next/image";
 
 type FormData = {
    idNumber: string;
@@ -92,16 +92,32 @@ export default function MembershipPage() {
 
    return (
       <>
+         {/* Hero Section */}
+         <div className="relative h-[40vh] w-full overflow-hidden -mt-24">
+            <Image
+               src="/hero/port-louise-marina-1.jpg"
+               alt="Join the New National Party"
+               fill
+               className="object-cover"
+               priority
+               sizes="100vw"
+            />
+            <div className="absolute inset-0 bg-black/40" />
+            <div className="absolute inset-0 flex items-center justify-center text-white">
+               <h1 className="text-4xl md:text-5xl font-bold">Join the New National Party</h1>
+            </div>
+         </div>
+
          <div className="container mx-auto px-4 py-12">
-            <Card className="max-w-3xl mx-auto">
+            <div className="max-w-3xl mx-auto bg-white p-8 md:p-12">
                {!membership ? (
                   <>
-                     <CardHeader>
-                        <CardTitle className="text-center">
+                     <div className="mb-8">
+                        <p className="text-xl font-bold">
                            NNP Membership Application
-                        </CardTitle>
-                     </CardHeader>
-                     <CardContent>
+                        </p>
+                     </div>
+                     <div>
                         <form
                            className="space-y-6"
                            onSubmit={handleSubmit(onSubmit)}>
@@ -506,11 +522,11 @@ export default function MembershipPage() {
                               Submit Application
                            </Button>
                         </form>
-                     </CardContent>
+                     </div>
                   </>
                ) : (
                   <div className="text-center py-16 px-4">
-                     <h2 className="text-lg font-bold">
+                     <h2 className="text-base font-bold">
                         Membership application submitted!
                      </h2>
                      <p>
@@ -523,14 +539,14 @@ export default function MembershipPage() {
                      </p>
                   </div>
                )}
-            </Card>
+            </div>
          </div>
 
          <div className="container mx-auto px-4 py-12">
-            <Card className="max-w-3xl mx-auto">
+            <div className="max-w-3xl mx-auto bg-white p-8 md:p-12">
                {!membership ? (
                   <div className="text-center py-16 px-4">
-                     <h2 className="text-lg font-bold">Make a Donation</h2>
+                     <h2 className="text-base font-bold">Make a Donation</h2>
                      <p>
                         Your contribution helps us further our mission and make
                         a difference in the community.
@@ -539,7 +555,7 @@ export default function MembershipPage() {
                ) : (
                   <DonationComponent />
                )}
-            </Card>
+            </div>
          </div>
       </>
    );

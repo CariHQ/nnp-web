@@ -5,7 +5,7 @@ import { SplitSection } from "@/components/split-section";
 
 export default function Home() {
    return (
-      <div>
+      <div className="-mt-24">
          <Hero />
          {/* <MissionVision /> */}
          {/* <PhotoGallery /> */}

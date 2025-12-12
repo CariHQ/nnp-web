@@ -2,11 +2,9 @@
 import { useState } from "react";
 import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { handleDonation } from "@/actions/donationActions";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 
@@ -172,10 +170,10 @@ export function Form() {
       <>
          {!donation ? (
             <>
-               <CardHeader>
-                  <CardTitle>Support Our Campaign</CardTitle>
-               </CardHeader>
-               <CardContent>
+               <div>
+                  <div className="mb-6">
+                     <h2 className="text-xl font-bold">Support Our Campaign</h2>
+                  </div>
                   <div className="space-y-6">
                      <form className="space-y-4" onSubmit={onSubmit}>
                         <div className="grid grid-cols-1 gap-4 w-full">
@@ -217,7 +215,7 @@ export function Form() {
                                     htmlFor="one-time"
                                     className={`h-24 flex items-center justify-center cursor-pointer ${
                                        donationType === "one-time"
-                                          ? "bg-green-600 text-white"
+                                          ? "bg-primary text-primary-foreground"
                                           : "bg-white text-black"
                                     } border rounded-md border-gray-300 transition duration-200 w-full`}>
                                     One-Time Donation
@@ -233,7 +231,7 @@ export function Form() {
                                     htmlFor="monthly"
                                     className={`h-24 flex items-center justify-center cursor-pointer ${
                                        donationType === "monthly"
-                                          ? "bg-green-600 text-white"
+                                          ? "bg-primary text-primary-foreground"
                                           : "bg-white text-black"
                                     } border rounded-md border-gray-300 transition duration-200 w-full`}>
                                     Monthly Support
@@ -262,7 +260,7 @@ export function Form() {
                         </Button>
                      </form>
                   </div>
-               </CardContent>
+               </div>
             </>
          ) : (
             <div className="text-center py-16 px-4">

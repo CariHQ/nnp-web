@@ -27,9 +27,14 @@ jobs:
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
+      - name: Enable Container Registry API
+        run: |
+          gcloud services enable containerregistry.googleapis.com --quiet || true
+
       - name: Authenticate Docker to GCR
         run: |
           gcloud auth configure-docker gcr.io --quiet
+          gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://gcr.io
 
       - name: Build and push Docker image
         run: |

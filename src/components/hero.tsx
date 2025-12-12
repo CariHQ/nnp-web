@@ -61,7 +61,7 @@ export function Hero() {
       }
 
       // Final fallback to default image
-      setImages([
+      const fallbackImages = [
         {
           id: 0,
           title: "Building a Stronger Grenada Together",
@@ -71,52 +71,31 @@ export function Hero() {
           createdAt: Date.now() / 1000,
           updatedAt: Date.now() / 1000,
         },
-      ]);
+      ];
+      setImages(fallbackImages);
     };
 
     fetchHeroImages();
-        
-        // Preload all images to prevent gray box delay
-        imageList.forEach((image) => {
-          if (image.imageUrl) {
-            const link = document.createElement("link");
-            link.rel = "preload";
-            link.as = "image";
-            link.href = image.imageUrl;
-            document.head.appendChild(link);
-            
-            // Also preload using Image constructor for better browser support
-            const img = new window.Image();
-            img.src = image.imageUrl;
-          }
-        });
-      })
-      .catch((error) => {
-        console.error("Error fetching hero images:", error);
-        // Fallback to default image on error
-        const fallbackImages = [
-          {
-            id: 0,
-            title: "Building a Stronger Grenada Together",
-            imageUrl: "/carenage.jpg",
-            order: 0,
-            active: true,
-            createdAt: Date.now() / 1000,
-            updatedAt: Date.now() / 1000,
-          },
-        ];
-        setImages(fallbackImages);
-        
-        // Preload fallback image
-        if (fallbackImages[0].imageUrl) {
+  }, []);
+
+  // Preload images when they're set
+  useEffect(() => {
+    if (images.length > 0) {
+      images.forEach((image) => {
+        if (image.imageUrl) {
           const link = document.createElement("link");
           link.rel = "preload";
           link.as = "image";
-          link.href = fallbackImages[0].imageUrl;
+          link.href = image.imageUrl;
           document.head.appendChild(link);
+          
+          // Also preload using Image constructor for better browser support
+          const img = new window.Image();
+          img.src = image.imageUrl;
         }
       });
-  }, []);
+    }
+  }, [images]);
 
   useEffect(() => {
     if (!api) {

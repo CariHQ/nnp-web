@@ -42,14 +42,32 @@ export default function AboutPage() {
 
   const fetchContent = async () => {
     try {
+      // Try API route first
       const res = await fetch('/api/pages/about')
-      const data = await res.json()
-      setContent(data.content || [])
+      if (res.ok) {
+        const data = await res.json()
+        setContent(data.content || [])
+        setLoading(false)
+        return
+      }
     } catch (error) {
-      console.error('Error fetching content:', error)
-    } finally {
-      setLoading(false)
+      console.log('API not available, using static data')
     }
+
+    // Fallback to static JSON file
+    try {
+      const staticRes = await fetch('/data/pages-about.json')
+      if (staticRes.ok) {
+        const staticData = await staticRes.json()
+        setContent(staticData.content || [])
+        setLoading(false)
+        return
+      }
+    } catch (error) {
+      console.error('Error fetching static content:', error)
+    }
+
+    setLoading(false)
   }
 
   const getSection = (section: string) => {

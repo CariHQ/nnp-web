@@ -1,8 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-   basePath: "",
-   assetPrefix: "",
-   trailingSlash: false,
+   basePath: process.env.NODE_ENV === 'production' ? '/nnp-web' : '',
+   assetPrefix: process.env.NODE_ENV === 'production' ? '/nnp-web' : '',
+   trailingSlash: true,
+   output: 'export',
    eslint: {
       ignoreDuringBuilds: true,
    },
@@ -10,6 +11,7 @@ const nextConfig = {
       ignoreBuildErrors: true,
    },
    images: {
+      unoptimized: true,
       remotePatterns: [
          {
             protocol: 'https',

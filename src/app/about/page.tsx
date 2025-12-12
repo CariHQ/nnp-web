@@ -69,6 +69,13 @@ export default function AboutPage() {
   const policies = getSection('policies')
   const commitment = getSection('commitment')
 
+  // Sort executives: those with images first
+  const sortedExecutives = [...executives].sort((a, b) => {
+    if (a.image && !b.image) return -1
+    if (!a.image && b.image) return 1
+    return 0
+  })
+
   return (
     <div>
       {/* Hero Section */}
@@ -101,19 +108,20 @@ export default function AboutPage() {
       <section className="mb-12 py-6">
         <h3 className="text-lg font-semibold mb-6">NNP Executive Team</h3>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {executives.map((exec, idx) => (
+          {sortedExecutives.map((exec, idx) => (
             <div key={idx} className="bg-white p-4 flex items-center space-x-4">
-              {exec.image ? (
-                <Image
-                  src={exec.image}
-                  alt={exec.name}
-                  width={80}
-                  height={80}
-                  className="rounded-full object-cover"
-                />
-              ) : (
-                <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-xs">
-                  No Photo
+              {exec.image && (
+                <div className="w-24 h-24 rounded-full overflow-hidden flex-shrink-0 relative">
+                  <Image
+                    src={exec.image}
+                    alt={exec.name}
+                    width={96}
+                    height={96}
+                    className="object-cover w-full h-full"
+                    style={{ 
+                      objectPosition: '50% 30%'
+                    }}
+                  />
                 </div>
               )}
               <div>
@@ -147,6 +155,7 @@ export default function AboutPage() {
           ))}
         </section>
       )}
+      </div>
     </div>
   )
 }

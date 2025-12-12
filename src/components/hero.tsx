@@ -30,31 +30,71 @@ export function Hero() {
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {
-    // Fetch hero images from Payload CMS
-    fetch("/api/hero-images")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.images && data.images.length > 0) {
-          setImages(data.images);
-        } else {
-          // Fallback to default image if no images in CMS
-          setImages([
-            {
-              id: 0,
-              title: "Building a Stronger Grenada Together",
-              imageUrl: "/carenage.jpg",
-              order: 0,
-              active: true,
-              createdAt: Date.now() / 1000,
-              updatedAt: Date.now() / 1000,
-            },
-          ]);
+    // Fetch hero images - try API first, fallback to static JSON
+    const fetchHeroImages = async () => {
+      try {
+        // Try API route first
+        const res = await fetch("/api/hero-images");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.images && data.images.length > 0) {
+            setImages(data.images);
+            return;
+          }
         }
+      } catch (error) {
+        console.log('API not available, using static data');
+      }
+
+      // Fallback to static JSON file
+      try {
+        const staticRes = await fetch("/data/hero-images.json");
+        if (staticRes.ok) {
+          const staticData = await staticRes.json();
+          if (staticData.images && staticData.images.length > 0) {
+            setImages(staticData.images);
+            return;
+          }
+        }
+      } catch (error) {
+        console.log('Static data not available');
+      }
+
+      // Final fallback to default image
+      setImages([
+        {
+          id: 0,
+          title: "Building a Stronger Grenada Together",
+          imageUrl: "/carenage.jpg",
+          order: 0,
+          active: true,
+          createdAt: Date.now() / 1000,
+          updatedAt: Date.now() / 1000,
+        },
+      ]);
+    };
+
+    fetchHeroImages();
+        
+        // Preload all images to prevent gray box delay
+        imageList.forEach((image) => {
+          if (image.imageUrl) {
+            const link = document.createElement("link");
+            link.rel = "preload";
+            link.as = "image";
+            link.href = image.imageUrl;
+            document.head.appendChild(link);
+            
+            // Also preload using Image constructor for better browser support
+            const img = new window.Image();
+            img.src = image.imageUrl;
+          }
+        });
       })
       .catch((error) => {
         console.error("Error fetching hero images:", error);
         // Fallback to default image on error
-        setImages([
+        const fallbackImages = [
           {
             id: 0,
             title: "Building a Stronger Grenada Together",
@@ -64,7 +104,17 @@ export function Hero() {
             createdAt: Date.now() / 1000,
             updatedAt: Date.now() / 1000,
           },
-        ]);
+        ];
+        setImages(fallbackImages);
+        
+        // Preload fallback image
+        if (fallbackImages[0].imageUrl) {
+          const link = document.createElement("link");
+          link.rel = "preload";
+          link.as = "image";
+          link.href = fallbackImages[0].imageUrl;
+          document.head.appendChild(link);
+        }
       });
   }, []);
 
@@ -90,9 +140,9 @@ export function Hero() {
   const currentImage = images[current] || images[0];
 
   return (
-    <div className="relative h-[50vh] w-full overflow-hidden">
+    <div className="relative h-[50vh] w-full overflow-hidden z-0">
       {/* Background Image Carousel */}
-      <div className="absolute inset-0 w-full h-full overflow-hidden">
+      <div className="absolute inset-0 w-full h-full overflow-hidden z-0">
         <Carousel
           setApi={setApi}
           plugins={images.length > 1 ? [autoplayPlugin] : []}
@@ -112,8 +162,10 @@ export function Hero() {
                       alt={image.title}
                       fill
                       className="object-cover"
-                      priority={index === 0}
+                      priority={index === 0 || index === 1}
                       sizes="100vw"
+                      quality={90}
+                      loading={index <= 1 ? "eager" : "lazy"}
                     />
                   ) : (
                     <div className="absolute inset-0 bg-gradient-to-r from-green-600 to-green-800" />

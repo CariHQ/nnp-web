@@ -9,7 +9,7 @@ async function seed() {
 
   // Check if admin user exists
   const existingAdmin = await db.query.users.findFirst({
-    where: eq(users.email, 'admin@votenpp.com'),
+    where: eq(users.email, 'admin@votennp.com'),
   })
 
   if (!existingAdmin) {
@@ -19,7 +19,7 @@ async function seed() {
     // Create user
     await db.insert(users).values({
       id: userId,
-      email: 'admin@votenpp.com',
+      email: 'admin@votennp.com',
       name: 'Admin User',
       emailVerified: true,
       createdAt: new Date(),
@@ -30,12 +30,12 @@ async function seed() {
     await db.insert(accounts).values({
       id: nanoid(),
       userId: userId,
-      accountId: 'admin@votenpp.com',
+      accountId: 'admin@votennp.com',
       providerId: 'credential',
       password: hashedPassword,
     })
 
-    console.log('✓ Admin user created (email: admin@votenpp.com, password: admin123)')
+    console.log('✓ Admin user created (email: admin@votennp.com, password: admin123)')
   } else {
     console.log('✓ Admin user already exists')
   }

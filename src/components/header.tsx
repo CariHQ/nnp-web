@@ -4,11 +4,11 @@ import { CustomImage } from "@/components/ui/image";
 
 export function Header() {
    return (
-      <header className="border-b">
+      <header className="border-b relative z-50">
          <nav className="container relative mx-auto px-4 py-4 flex items-center justify-between">
             <Link
                href="/"
-               className="text-2xl font-bold absolute z-20 border -mb-6 mt-6 md:mt-12 bg-white p-1 rounded-full w-[100px] h-[100px] md:w-[120px] md:h-[120px]">
+               className="text-2xl font-bold absolute z-[60] border -mb-6 mt-6 md:mt-12 bg-white p-1 rounded-full w-[100px] h-[100px] md:w-[120px] md:h-[120px]">
                <CustomImage
                   src={`/nnplogo.png`}
                   alt="Logo"

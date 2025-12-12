@@ -6,7 +6,8 @@
       "dev": "next dev --experimental-https",
       "build": "next build",
       "start": "next start",
-      "lint": "next lint"
+      "lint": "next lint",
+      "process-headshots": "tsx scripts/process-headshots.ts"
    },
    "dependencies": {
       "@hookform/resolvers": "4.0.0",

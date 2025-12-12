@@ -28,18 +28,37 @@ function extractDate(filename: string, content?: string): Date | null {
 
   // Try to extract from content if provided
   if (content) {
+    // Look for dates in various formats in the content
     const contentDatePatterns = [
-      /(?:Date|Dated?|Published?)[:\s]+(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/i,
+      /(?:Date|Dated?|Published?|For Immediate Release)[:\s]+(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/i,
       /(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/,
+      /(?:Date|Dated?)[:\s]+(\w+)\s+(\d{1,2}),?\s+(\d{4})/i, // "Date: June 30, 2024"
+      /(\w+)\s+(\d{1,2}),?\s+(\d{4})/, // "June 30, 2024"
     ]
 
     for (const pattern of contentDatePatterns) {
       const match = content.match(pattern)
       if (match) {
-        const month = match[1].padStart(2, '0')
-        const day = match[2].padStart(2, '0')
-        const year = match[3]
-        return new Date(`${year}-${month}-${day}`)
+        if (match.length === 4) {
+          // Check if it's a month name format
+          if (isNaN(parseInt(match[1]))) {
+            // Month name format: "June 30, 2024"
+            const monthNames = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']
+            const monthIndex = monthNames.findIndex(m => m.startsWith(match[1].toLowerCase()))
+            if (monthIndex !== -1) {
+              const month = String(monthIndex + 1).padStart(2, '0')
+              const day = match[2].padStart(2, '0')
+              const year = match[3]
+              return new Date(`${year}-${month}-${day}`)
+            }
+          } else {
+            // Numeric format: "6/30/2024" or "06/30/2024"
+            const month = match[1].padStart(2, '0')
+            const day = match[2].padStart(2, '0')
+            const year = match[3]
+            return new Date(`${year}-${month}-${day}`)
+          }
+        }
       }
     }
   }
@@ -72,26 +91,18 @@ function extractTitle(filename: string): string {
 // Read PDF text
 async function readPDF(filePath: string): Promise<string> {
   try {
-    // Try to use pdf-parse if available
-    try {
-      const pdfParse = require('pdf-parse')
-      const buffer = readFileSync(filePath)
-      const data = await pdfParse(buffer)
-      return data.text.trim()
-    } catch (pdfError) {
-      // Fallback: return placeholder
-      return `Press release content from ${filePath}. Full text available in original PDF.`
-    }
-  } catch (error) {
-    console.error(`Error reading PDF ${filePath}:`, error)
-    return `Press release content from ${filePath}. Full text available in original PDF.`
+    const pdfParse = require('pdf-parse')
+    const buffer = readFileSync(filePath)
+    const data = await pdfParse(buffer)
+    return data.text.trim()
+  } catch (error: any) {
+    console.error(`Error reading PDF ${filePath}:`, error.message)
+    return ''
   }
 }
 
-// Read image and extract text (placeholder)
+// Read image - for now just return placeholder
 async function readImage(filePath: string): Promise<string> {
-  // For images, we'll use the filename as the content
-  // In production, you might want to use OCR
   return `Press release image: ${filePath}`
 }
 
@@ -154,17 +165,12 @@ async function importPressReleases() {
 
   for (const release of releases) {
     try {
-      // Check if slug already exists
+      // Check if slug already exists - if so, update it
       const existing = await db
         .select()
         .from(blogPosts)
         .where(eq(blogPosts.slug, release.slug))
         .limit(1)
-
-      if (existing.length > 0) {
-        console.log(`⏭️  Skipped: "${release.title}" (slug already exists)`)
-        continue
-      }
 
       // Use file modification date if no date found
       let publishedDate: Date
@@ -173,7 +179,6 @@ async function importPressReleases() {
       } else {
         // Use file modification time
         const stats = statSync(join(pressReleasesDir, release.filename))
-        // stats.mtime is already a Date object in Node.js
         publishedDate = new Date(stats.mtime)
       }
       
@@ -183,22 +188,35 @@ async function importPressReleases() {
         publishedDate = new Date()
       }
 
-      // Drizzle expects a Date object for timestamp mode, not a number
-      await db.insert(blogPosts).values({
-        title: release.title,
-        slug: release.slug,
-        content: release.content,
-        excerpt: release.title.substring(0, 200), // Use title as excerpt for now
-        published: true,
-        publishedAt: publishedDate, // Pass Date object, Drizzle will convert to timestamp
-        author: 'New National Party',
-      })
-
-      console.log(`✅ Imported: "${release.title}"`)
+      if (existing.length > 0) {
+        // Update existing
+        await db
+          .update(blogPosts)
+          .set({
+            title: release.title,
+            content: release.content,
+            excerpt: release.content.substring(0, 200),
+            publishedAt: publishedDate,
+            updatedAt: new Date(),
+          })
+          .where(eq(blogPosts.id, existing[0].id))
+        console.log(`✅ Updated: "${release.title}"`)
+      } else {
+        // Insert new
+        await db.insert(blogPosts).values({
+          title: release.title,
+          slug: release.slug,
+          content: release.content,
+          excerpt: release.content.substring(0, 200),
+          published: true,
+          publishedAt: publishedDate,
+          author: 'New National Party',
+        })
+        console.log(`✅ Imported: "${release.title}"`)
+      }
       console.log(`   Published: ${publishedDate.toLocaleDateString()}`)
     } catch (error: any) {
       console.error(`❌ Error importing "${release.title}":`, error.message)
-      console.error(`   Full error:`, error)
       if (error.stack) {
         console.error(`   Stack:`, error.stack.split('\n').slice(0, 3).join('\n'))
       }

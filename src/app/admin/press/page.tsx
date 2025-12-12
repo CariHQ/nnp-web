@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import Link from 'next/link'
 import Image from 'next/image'
 
-type BlogPost = {
+type PressRelease = {
   id: number
   title: string
   slug: string
@@ -19,9 +19,9 @@ type BlogPost = {
   createdAt: number
 }
 
-export default function BlogPage() {
+export default function PressPage() {
   const router = useRouter()
-  const [posts, setPosts] = useState<BlogPost[]>([])
+  const [posts, setPosts] = useState<PressRelease[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -30,32 +30,32 @@ export default function BlogPage() {
 
   const fetchPosts = async () => {
     try {
-      const res = await fetch('/api/admin/blog')
+      const res = await fetch('/api/admin/press')
       const data = await res.json()
       setPosts(data.posts || [])
     } catch (error) {
-      console.error('Error fetching posts:', error)
+      console.error('Error fetching press releases:', error)
     } finally {
       setLoading(false)
     }
   }
 
   const handleDelete = async (id: number) => {
-    if (!confirm('Are you sure you want to delete this post?')) return
+    if (!confirm('Are you sure you want to delete this press release?')) return
 
     try {
-      await fetch(`/api/admin/blog/${id}`, {
+      await fetch(`/api/admin/press/${id}`, {
         method: 'DELETE',
       })
       fetchPosts()
     } catch (error) {
-      console.error('Error deleting post:', error)
+      console.error('Error deleting press release:', error)
     }
   }
 
   const togglePublished = async (id: number, published: boolean) => {
     try {
-      await fetch(`/api/admin/blog/${id}`, {
+      await fetch(`/api/admin/press/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -79,7 +79,7 @@ export default function BlogPage() {
             </Link>
             <h1 className="text-2xl font-bold">Press Releases</h1>
           </div>
-          <Link href="/admin/blog/new">
+          <Link href="/admin/press/new">
             <Button>Add New Release</Button>
           </Link>
         </div>
@@ -87,7 +87,7 @@ export default function BlogPage() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {loading ? (
-          <div>Loading posts...</div>
+          <div>Loading press releases...</div>
         ) : posts.length === 0 ? (
           <Card>
             <CardContent className="py-8 text-center text-gray-500">
@@ -109,7 +109,7 @@ export default function BlogPage() {
                       >
                         {post.published ? 'Published' : 'Draft'}
                       </Button>
-                      <Link href={`/admin/blog/${post.id}`}>
+                      <Link href={`/admin/press/${post.id}`}>
                         <Button variant="outline" size="sm">
                           Edit
                         </Button>

@@ -19,8 +19,8 @@ export async function PATCH(
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Error updating blog post:', error)
-    return NextResponse.json({ error: 'Failed to update post' }, { status: 500 })
+    console.error('Error updating press release:', error)
+    return NextResponse.json({ error: 'Failed to update press release' }, { status: 500 })
   }
 }
 
@@ -33,8 +33,8 @@ export async function DELETE(
     await db.delete(blogPosts).where(eq(blogPosts.id, parseInt(id)))
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Error deleting blog post:', error)
-    return NextResponse.json({ error: 'Failed to delete post' }, { status: 500 })
+    console.error('Error deleting press release:', error)
+    return NextResponse.json({ error: 'Failed to delete press release' }, { status: 500 })
   }
 }
 

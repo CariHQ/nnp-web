@@ -68,7 +68,7 @@ export function AdminDashboardClient() {
             </Card>
           </Link>
 
-          <Link href="/admin/blog">
+          <Link href="/admin/press">
             <Card className="hover:shadow-lg transition-shadow cursor-pointer">
               <CardHeader>
                 <CardTitle>Press Releases</CardTitle>

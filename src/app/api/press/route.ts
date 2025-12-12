@@ -33,8 +33,8 @@ export async function GET(req: Request) {
     
     return NextResponse.json({ posts })
   } catch (error) {
-    console.error('Error fetching blog posts:', error)
-    return NextResponse.json({ error: 'Failed to fetch posts' }, { status: 500 })
+    console.error('Error fetching press releases:', error)
+    return NextResponse.json({ error: 'Failed to fetch press releases' }, { status: 500 })
   }
 }
 

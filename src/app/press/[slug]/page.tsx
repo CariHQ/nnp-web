@@ -4,7 +4,7 @@ import { eq } from 'drizzle-orm'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 
-export default async function BlogPostPage({
+export default async function PressReleasePage({
   params,
 }: {
   params: Promise<{ slug: string }>
@@ -20,7 +20,7 @@ export default async function BlogPostPage({
       .where(eq(blogPosts.slug, slug))
       .limit(1)
   } catch (error) {
-    console.error('Error fetching blog post:', error)
+    console.error('Error fetching press release:', error)
     notFound()
   }
 

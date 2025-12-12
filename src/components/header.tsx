@@ -20,7 +20,7 @@ export function Header() {
             <div></div>
             <div className="flex gap-4 items-center">
                <Link href="/about">About</Link>
-               <Link href="/blog">Press</Link>
+               <Link href="/press">Press</Link>
                <Link href="/membership">Join Us</Link>
                {/* <Link href="/gallery">Gallery</Link> */}
                <Button asChild variant="secondary">

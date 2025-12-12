@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import Link from 'next/link'
 
-type BlogPost = {
+type PressRelease = {
   id: number
   title: string
   slug: string
@@ -20,13 +20,13 @@ type BlogPost = {
   publishedAt: number | null
 }
 
-export default function EditBlogPostPage() {
+export default function EditPressReleasePage() {
   const router = useRouter()
   const params = useParams()
   const id = params.id as string
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
-  const [formData, setFormData] = useState<BlogPost | null>(null)
+  const [formData, setFormData] = useState<PressRelease | null>(null)
 
   useEffect(() => {
     fetchPost()
@@ -34,14 +34,14 @@ export default function EditBlogPostPage() {
 
   const fetchPost = async () => {
     try {
-      const res = await fetch('/api/admin/blog')
+      const res = await fetch('/api/admin/press')
       const data = await res.json()
-      const post = data.posts.find((p: BlogPost) => p.id === parseInt(id))
+      const post = data.posts.find((p: PressRelease) => p.id === parseInt(id))
       if (post) {
         setFormData(post)
       }
     } catch (error) {
-      console.error('Error fetching post:', error)
+      console.error('Error fetching press release:', error)
     } finally {
       setLoading(false)
     }
@@ -54,7 +54,7 @@ export default function EditBlogPostPage() {
     setSaving(true)
 
     try {
-      const res = await fetch(`/api/admin/blog/${id}`, {
+      const res = await fetch(`/api/admin/press/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -66,13 +66,13 @@ export default function EditBlogPostPage() {
       })
 
       if (res.ok) {
-        router.push('/admin/blog')
+        router.push('/admin/press')
       } else {
         const data = await res.json()
-        alert(data.error || 'Failed to update post')
+        alert(data.error || 'Failed to update press release')
       }
     } catch (error) {
-      console.error('Error updating post:', error)
+      console.error('Error updating press release:', error)
       alert('An error occurred')
     } finally {
       setSaving(false)
@@ -100,7 +100,7 @@ export default function EditBlogPostPage() {
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <div className="flex items-center gap-4">
-            <Link href="/admin/blog">
+            <Link href="/admin/press">
               <Button variant="outline">← Back</Button>
             </Link>
             <h1 className="text-2xl font-bold">Edit Press Release</h1>
@@ -137,7 +137,7 @@ export default function EditBlogPostPage() {
               type="url"
               value={formData.headerImage || ''}
               onChange={(e) => setFormData({ ...formData, headerImage: e.target.value })}
-              placeholder="/images/blog-header.jpg"
+              placeholder="/images/press-header.jpg"
             />
           </div>
 
@@ -186,7 +186,7 @@ export default function EditBlogPostPage() {
             <Button type="submit" disabled={saving}>
               {saving ? 'Saving...' : 'Save Changes'}
             </Button>
-            <Link href="/admin/blog">
+            <Link href="/admin/press">
               <Button type="button" variant="outline">
                 Cancel
               </Button>

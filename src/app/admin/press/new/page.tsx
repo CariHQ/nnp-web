@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import Link from 'next/link'
 
-export default function NewBlogPostPage() {
+export default function NewPressReleasePage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
@@ -42,7 +42,7 @@ export default function NewBlogPostPage() {
     setLoading(true)
 
     try {
-      const res = await fetch('/api/admin/blog', {
+      const res = await fetch('/api/admin/press', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -52,13 +52,13 @@ export default function NewBlogPostPage() {
       })
 
       if (res.ok) {
-        router.push('/admin/blog')
+        router.push('/admin/press')
       } else {
         const data = await res.json()
-        alert(data.error || 'Failed to create post')
+        alert(data.error || 'Failed to create press release')
       }
     } catch (error) {
-      console.error('Error creating post:', error)
+      console.error('Error creating press release:', error)
       alert('An error occurred')
     } finally {
       setLoading(false)
@@ -70,7 +70,7 @@ export default function NewBlogPostPage() {
       <header className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <div className="flex items-center gap-4">
-            <Link href="/admin/blog">
+            <Link href="/admin/press">
               <Button variant="outline">← Back</Button>
             </Link>
             <h1 className="text-2xl font-bold">Add New Press Release</h1>
@@ -99,7 +99,7 @@ export default function NewBlogPostPage() {
               required
             />
             <p className="text-sm text-gray-500 mt-1">
-              URL-friendly version of the title (e.g., "my-blog-post")
+              URL-friendly version of the title (e.g., "my-press-release")
             </p>
           </div>
 
@@ -110,7 +110,7 @@ export default function NewBlogPostPage() {
               type="url"
               value={formData.headerImage}
               onChange={(e) => setFormData({ ...formData, headerImage: e.target.value })}
-              placeholder="/images/blog-header.jpg"
+              placeholder="/images/press-header.jpg"
             />
           </div>
 
@@ -121,7 +121,7 @@ export default function NewBlogPostPage() {
               value={formData.excerpt}
               onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
               rows={3}
-              placeholder="Short preview text for the blog post..."
+              placeholder="Short preview text for the press release..."
             />
           </div>
 
@@ -133,7 +133,7 @@ export default function NewBlogPostPage() {
               onChange={(e) => setFormData({ ...formData, content: e.target.value })}
               rows={15}
               required
-              placeholder="Write your blog post content here..."
+              placeholder="Write your press release content here..."
             />
           </div>
 
@@ -161,7 +161,7 @@ export default function NewBlogPostPage() {
             <Button type="submit" disabled={loading}>
               {loading ? 'Creating...' : 'Create Release'}
             </Button>
-            <Link href="/admin/blog">
+            <Link href="/admin/press">
               <Button type="button" variant="outline">
                 Cancel
               </Button>

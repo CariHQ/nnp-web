@@ -9,8 +9,8 @@ export async function GET() {
     const posts = await db.select().from(blogPosts).orderBy(desc(blogPosts.createdAt))
     return NextResponse.json({ posts })
   } catch (error) {
-    console.error('Error fetching blog posts:', error)
-    return NextResponse.json({ error: 'Failed to fetch posts' }, { status: 500 })
+    console.error('Error fetching press releases:', error)
+    return NextResponse.json({ error: 'Failed to fetch press releases' }, { status: 500 })
   }
 }
 
@@ -23,8 +23,8 @@ export async function POST(req: Request) {
     }).returning()
     return NextResponse.json({ post: newPost })
   } catch (error) {
-    console.error('Error creating blog post:', error)
-    return NextResponse.json({ error: 'Failed to create post' }, { status: 500 })
+    console.error('Error creating press release:', error)
+    return NextResponse.json({ error: 'Failed to create press release' }, { status: 500 })
   }
 }
 

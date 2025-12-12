@@ -4,7 +4,7 @@ import { eq } from 'drizzle-orm'
 import Link from 'next/link'
 import Image from 'next/image'
 
-export default async function BlogPage() {
+export default async function PressPage() {
   let posts = []
   
   try {
@@ -21,7 +21,7 @@ export default async function BlogPage() {
       return (bDate || 0) - (aDate || 0)
     })
   } catch (error) {
-    console.error('Error fetching blog posts:', error)
+    console.error('Error fetching press releases:', error)
     // Return empty array if query fails
     posts = []
   }
@@ -36,40 +36,42 @@ export default async function BlogPage() {
             <p className="text-gray-500">No press releases yet. Check back soon!</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="space-y-6">
             {posts.map((post) => (
               <Link
                 key={post.id}
-                href={`/blog/${post.slug}`}
-                className="group"
+                href={`/press/${post.slug}`}
+                className="group block"
               >
                 <article className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                  {post.headerImage && (
-                    <div className="relative h-48 w-full">
-                      <Image
-                        src={post.headerImage}
-                        alt={post.title}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                  )}
-                  <div className="p-6">
-                    <h2 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
-                      {post.title}
-                    </h2>
-                    {post.excerpt && (
-                      <p className="text-gray-600 mb-4 line-clamp-3">
-                        {post.excerpt}
-                      </p>
+                  <div className="flex flex-col md:flex-row">
+                    {post.headerImage && (
+                      <div className="relative h-64 md:h-auto md:w-80 flex-shrink-0">
+                        <Image
+                          src={post.headerImage}
+                          alt={post.title}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
                     )}
-                    <div className="flex justify-between items-center text-sm text-gray-500">
-                      {post.author && <span>By {post.author}</span>}
-                      {post.publishedAt && (
-                        <span>
-                          {new Date(post.publishedAt * 1000).toLocaleDateString()}
-                        </span>
+                    <div className="p-6 flex-1">
+                      <h2 className="text-2xl font-bold mb-2 group-hover:text-primary transition-colors">
+                        {post.title}
+                      </h2>
+                      {post.excerpt && (
+                        <p className="text-gray-600 mb-4">
+                          {post.excerpt}
+                        </p>
                       )}
+                      <div className="flex justify-between items-center text-sm text-gray-500">
+                        {post.author && <span>By {post.author}</span>}
+                        {post.publishedAt && (
+                          <span>
+                            {new Date(post.publishedAt * 1000).toLocaleDateString()}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </article>

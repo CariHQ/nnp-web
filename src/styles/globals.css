@@ -180,9 +180,4 @@ html {
    }
 }
 
-/* Responsive typography */
-@media (min-width: 768px) {
-   h1 {
-      @apply text-5xl;
-   }
-}
+/* Responsive typography - removed global h1 styling to allow component-level control */

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { MarkdownEditor } from '@/components/markdown-editor'
 import Link from 'next/link'
 
 type PressRelease = {
@@ -153,13 +154,14 @@ export default function EditPressReleasePage() {
 
           <div>
             <Label htmlFor="content">Content *</Label>
-            <Textarea
-              id="content"
+            <MarkdownEditor
               value={formData.content}
-              onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-              rows={15}
-              required
+              onChange={(value) => setFormData({ ...formData, content: value })}
+              placeholder="Write your press release content here..."
             />
+            <p className="text-sm text-gray-500 mt-2">
+              Use the toolbar buttons or markdown syntax to format your content. The content supports markdown formatting.
+            </p>
           </div>
 
           <div>

@@ -3,6 +3,7 @@ import { blogPosts } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
 import Link from 'next/link'
 import Image from 'next/image'
+import ReactMarkdown from 'react-markdown'
 
 export default async function PressPage() {
   let posts = []
@@ -29,7 +30,7 @@ export default async function PressPage() {
   return (
     <div className="min-h-screen bg-white">
       <div className="container mx-auto px-4 py-16">
-        <h1 className="text-4xl font-bold mb-8">Press</h1>
+        <h1 className="text-2xl md:text-3xl font-bold mb-6">Press</h1>
         
         {posts.length === 0 ? (
           <div className="text-center py-16">
@@ -43,10 +44,10 @@ export default async function PressPage() {
                 href={`/press/${post.slug}`}
                 className="group block"
               >
-                <article className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                <article className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:border-gray-300 hover:shadow-sm transition-all">
                   <div className="flex flex-col md:flex-row">
                     {post.headerImage && (
-                      <div className="relative h-64 md:h-auto md:w-80 flex-shrink-0">
+                      <div className="relative h-40 md:h-auto md:w-48 flex-shrink-0">
                         <Image
                           src={post.headerImage}
                           alt={post.title}
@@ -55,20 +56,32 @@ export default async function PressPage() {
                         />
                       </div>
                     )}
-                    <div className="p-6 flex-1">
-                      <h2 className="text-2xl font-bold mb-2 group-hover:text-primary transition-colors">
+                    <div className="p-4 flex-1 flex flex-col min-w-0">
+                      <h2 className="text-base font-medium mb-1.5 text-gray-900 group-hover:text-primary transition-colors line-clamp-2 leading-snug">
                         {post.title}
                       </h2>
                       {post.excerpt && (
-                        <p className="text-gray-600 mb-4">
-                          {post.excerpt}
-                        </p>
+                        <div className="text-gray-600 text-xs mb-3 line-clamp-2 flex-grow leading-relaxed">
+                          <ReactMarkdown
+                            components={{
+                              p: ({ children }) => <span className="inline">{children}</span>,
+                              strong: ({ children }) => <strong className="font-medium text-gray-700">{children}</strong>,
+                              em: ({ children }) => <em className="italic">{children}</em>,
+                            }}
+                          >
+                            {post.excerpt.replace(/\*\*/g, '').replace(/\n/g, ' ').trim()}
+                          </ReactMarkdown>
+                        </div>
                       )}
-                      <div className="flex justify-between items-center text-sm text-gray-500">
-                        {post.author && <span>By {post.author}</span>}
+                      <div className="flex justify-between items-center text-xs text-gray-400 mt-auto pt-2">
+                        {post.author && <span className="truncate">{post.author}</span>}
                         {post.publishedAt && (
-                          <span>
-                            {new Date(post.publishedAt * 1000).toLocaleDateString()}
+                          <span className="ml-2 flex-shrink-0">
+                            {new Date(post.publishedAt instanceof Date ? post.publishedAt.getTime() : post.publishedAt * 1000).toLocaleDateString('en-US', {
+                              year: 'numeric',
+                              month: 'short',
+                              day: 'numeric',
+                            })}
                           </span>
                         )}
                       </div>

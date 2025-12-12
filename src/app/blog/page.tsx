@@ -1,15 +1,24 @@
 import { db } from '@/lib/db'
 import { blogPosts } from '@/lib/db/schema'
-import { eq, desc } from 'drizzle-orm'
+import { eq, desc, sql } from 'drizzle-orm'
 import Link from 'next/link'
 import Image from 'next/image'
 
 export default async function BlogPage() {
-  const posts = await db
-    .select()
-    .from(blogPosts)
-    .where(eq(blogPosts.published, true))
-    .orderBy(desc(blogPosts.publishedAt))
+  let posts = []
+  
+  try {
+    // Order by publishedAt desc, but handle nulls by using createdAt as fallback
+    posts = await db
+      .select()
+      .from(blogPosts)
+      .where(eq(blogPosts.published, true))
+      .orderBy(desc(sql`COALESCE(${blogPosts.publishedAt}, ${blogPosts.createdAt})`))
+  } catch (error) {
+    console.error('Error fetching blog posts:', error)
+    // Return empty array if query fails
+    posts = []
+  }
 
   return (
     <div className="min-h-screen bg-white">

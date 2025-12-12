@@ -11,11 +11,18 @@ export default async function BlogPostPage({
 }) {
   const { slug } = await params
   
-  const posts = await db
-    .select()
-    .from(blogPosts)
-    .where(eq(blogPosts.slug, slug))
-    .limit(1)
+  let posts = []
+  
+  try {
+    posts = await db
+      .select()
+      .from(blogPosts)
+      .where(eq(blogPosts.slug, slug))
+      .limit(1)
+  } catch (error) {
+    console.error('Error fetching blog post:', error)
+    notFound()
+  }
 
   if (posts.length === 0 || !posts[0].published) {
     notFound()

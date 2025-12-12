@@ -49,6 +49,9 @@ jobs:
         run: |
           IMAGE_URI="$REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$SERVICE_NAME"
           docker build \
+            --build-arg NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="${{ vars.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }}" \
+            --build-arg NEXT_PUBLIC_ODOO_ACCESS_TOKEN="${{ vars.NEXT_PUBLIC_ODOO_ACCESS_TOKEN }}" \
+            --build-arg NEXT_PUBLIC_NODE_ENV="${{ vars.NEXT_PUBLIC_NODE_ENV }}" \
             -t $IMAGE_URI:$GITHUB_SHA \
             -t $IMAGE_URI:latest .
           docker push $IMAGE_URI:$GITHUB_SHA

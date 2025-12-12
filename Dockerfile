@@ -21,6 +21,16 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 ENV CLOUD_RUN=true
 
+# Accept build args for NEXT_PUBLIC_* variables (needed at build time for client bundle)
+ARG NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+ARG NEXT_PUBLIC_ODOO_ACCESS_TOKEN
+ARG NEXT_PUBLIC_NODE_ENV
+
+# Set as ENV so they're available during build
+ENV NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=$NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+ENV NEXT_PUBLIC_ODOO_ACCESS_TOKEN=$NEXT_PUBLIC_ODOO_ACCESS_TOKEN
+ENV NEXT_PUBLIC_NODE_ENV=$NEXT_PUBLIC_NODE_ENV
+
 # Build Next.js app (Cloud Run uses standalone output)
 # For Cloud Run, we don't need to generate static data - app queries DB at runtime
 # We also don't need pre-build/post-build scripts (those are for static export)

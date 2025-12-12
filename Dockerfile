@@ -53,6 +53,10 @@ COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
+# Ensure libsql native modules are available
+# Copy from deps stage to ensure native binaries are included
+COPY --from=deps --chown=nextjs:nodejs /app/node_modules/@libsql ./node_modules/@libsql 2>/dev/null || true
+
 # Ensure the server.js file exists (standalone build creates it)
 RUN test -f server.js || (echo "Error: server.js not found in standalone build" && exit 1)
 

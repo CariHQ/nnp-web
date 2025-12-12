@@ -20,7 +20,11 @@ export default async function PressPage() {
       const aDate = a.publishedAt || a.createdAt
       const bDate = b.publishedAt || b.createdAt
       return (bDate || 0) - (aDate || 0)
-    })
+    }).map(post => ({
+      ...post,
+      // Ensure we use publishedAt if available, not createdAt
+      publishedAt: post.publishedAt || null
+    }))
   } catch (error) {
     console.error('Error fetching press releases:', error)
     // Return empty array if query fails

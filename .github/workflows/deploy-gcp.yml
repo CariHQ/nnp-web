@@ -27,9 +27,9 @@ jobs:
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: Authenticate to Google Cloud
+      - name: Authenticate Docker to GCR
         run: |
-          gcloud auth configure-docker
+          gcloud auth configure-docker --quiet
 
       - name: Build and push Docker image
         run: |

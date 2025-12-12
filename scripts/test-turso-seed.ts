@@ -8,7 +8,8 @@ async function testTursoSeed() {
   try {
     // Test 1: Check database connection
     console.log('1️⃣  Testing database connection...')
-    const testQuery = await db.execute('SELECT 1 as test')
+    // Test connection by querying users table
+    await db.query.users.findFirst()
     console.log('   ✅ Database connection successful\n')
 
     // Test 2: Check if admin user exists

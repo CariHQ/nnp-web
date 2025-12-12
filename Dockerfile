@@ -8,7 +8,7 @@ WORKDIR /app
 
 # Copy package files
 COPY package.json package-lock.json* ./
-RUN npm ci
+RUN npm install
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -29,6 +29,9 @@ ENV TURSO_DATABASE_URL=$TURSO_DATABASE_URL
 ENV TURSO_AUTH_TOKEN=$TURSO_AUTH_TOKEN
 RUN CLOUD_RUN=true npm run generate-static-data
 RUN CLOUD_RUN=true npm run build
+# Unset sensitive env vars (they're only needed during build)
+ENV TURSO_DATABASE_URL=
+ENV TURSO_AUTH_TOKEN=
 
 # Production image, copy all the files and run next
 FROM base AS runner

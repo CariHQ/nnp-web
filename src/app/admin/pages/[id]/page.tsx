@@ -9,11 +9,6 @@ import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import Link from 'next/link'
 
-// Required for static export
-export function generateStaticParams() {
-  return []
-}
-
 export default function EditPageContent() {
   const router = useRouter()
   const params = useParams()

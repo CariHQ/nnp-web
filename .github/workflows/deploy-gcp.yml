@@ -1,0 +1,75 @@
+name: Deploy to GCP Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+  REGION: us-central1
+  SERVICE_NAME: nnp-web
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Authenticate to Google Cloud
+        run: |
+          gcloud auth configure-docker
+
+      - name: Generate static data
+        env:
+          TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
+          TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
+          NODE_ENV: production
+          CLOUD_RUN: true
+        run: npm run generate-static-data
+
+      - name: Build and push Docker image
+        run: |
+          docker build -t gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA \
+                       -t gcr.io/$PROJECT_ID/$SERVICE_NAME:latest .
+          docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA
+          docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:latest
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy $SERVICE_NAME \
+            --image gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA \
+            --region $REGION \
+            --platform managed \
+            --allow-unauthenticated \
+            --port 3000 \
+            --memory 512Mi \
+            --cpu 1 \
+            --min-instances 0 \
+            --max-instances 10 \
+            --set-env-vars NODE_ENV=production,CLOUD_RUN=true \
+            --set-env-vars TURSO_DATABASE_URL=${{ secrets.TURSO_DATABASE_URL }} \
+            --set-env-vars TURSO_AUTH_TOKEN=${{ secrets.TURSO_AUTH_TOKEN }} \
+            --set-env-vars NEXT_PUBLIC_NODE_ENV=${{ vars.NEXT_PUBLIC_NODE_ENV }} \
+            --set-env-vars NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=${{ vars.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }} \
+            --set-env-vars NEXT_PUBLIC_ODOO_ACCESS_TOKEN=${{ vars.NEXT_PUBLIC_ODOO_ACCESS_TOKEN }} \
+            --set-env-vars STRIPE_SECRET_KEY=${{ vars.STRIPE_SECRET_KEY }} \
+            --set-env-vars STRIPE_METERED_PRICE_ID=${{ vars.STRIPE_METERED_PRICE_ID }} \
+            --set-env-vars AUTH_SECRET=${{ secrets.AUTH_SECRET }}
+
+      - name: Get Cloud Run URL
+        run: |
+          SERVICE_URL=$(gcloud run services describe $SERVICE_NAME --region $REGION --format 'value(status.url)')
+          echo "🚀 Deployed to: $SERVICE_URL"
+          echo "::set-output name=url::$SERVICE_URL"
+

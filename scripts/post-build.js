@@ -7,7 +7,8 @@ const adminDir = path.join(process.cwd(), 'src', 'app', 'admin');
 const tempApiDir = path.join(process.cwd(), 'src', '_api_temp');
 const tempAdminDir = path.join(process.cwd(), 'src', '_admin_temp');
 
-if (process.env.NODE_ENV === 'production') {
+// Only restore routes for static export (GitHub Pages), not for Cloud Run
+if (process.env.NODE_ENV === 'production' && !process.env.CLOUD_RUN) {
   if (fs.existsSync(tempApiDir)) {
     console.log('Restoring API routes after build...');
     if (fs.existsSync(apiDir)) {

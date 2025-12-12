@@ -7,7 +7,8 @@ const adminDir = path.join(process.cwd(), 'src', 'app', 'admin');
 const tempApiDir = path.join(process.cwd(), 'src', '_api_temp');
 const tempAdminDir = path.join(process.cwd(), 'src', '_admin_temp');
 
-if (process.env.NODE_ENV === 'production') {
+// Only move routes for static export (GitHub Pages), not for Cloud Run
+if (process.env.NODE_ENV === 'production' && !process.env.CLOUD_RUN) {
   if (fs.existsSync(apiDir)) {
     console.log('Moving API routes out of app directory for static export...');
     if (fs.existsSync(tempApiDir)) {

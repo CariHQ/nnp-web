@@ -53,6 +53,10 @@ COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
+# Copy node_modules for client-side dependencies (like markdown editor CSS)
+# Standalone build doesn't include all node_modules, so we need to copy specific ones
+COPY --from=deps --chown=nextjs:nodejs /app/node_modules/@uiw ./node_modules/@uiw
+
 # Ensure libsql native modules are available
 # The standalone build should include them, but copy from deps if they exist
 RUN mkdir -p node_modules/@libsql || true

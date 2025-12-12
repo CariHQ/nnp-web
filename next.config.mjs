@@ -37,6 +37,12 @@ const nextConfig = {
       parallelServerBuildTraces: true,
       parallelServerCompiles: true,
    },
+   // Ensure CSS is properly bundled in standalone mode
+   outputFileTracingIncludes: {
+      '/**': [
+         'node_modules/@uiw/**/*',
+      ],
+   },
 };
 
 export default nextConfig;

@@ -3,6 +3,13 @@ import { db } from '@/lib/db'
 import { pageContent } from '@/lib/db/schema'
 import { eq, and, asc } from 'drizzle-orm'
 
+export const dynamic = 'force-static'
+
+// Required for static export - return empty array to skip API routes
+export async function generateStaticParams() {
+  return []
+}
+
 export async function GET(
   req: Request,
   { params }: { params: Promise<{ page: string }> }

@@ -3,6 +3,8 @@ import { db } from '@/lib/db'
 import { stripePayments } from '@/lib/db/schema'
 import { desc } from 'drizzle-orm'
 
+export const dynamic = 'force-static'
+
 export async function GET() {
   try {
     const payments = await db

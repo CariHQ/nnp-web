@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+export const dynamic = 'force-static'
 import Stripe from "stripe";
 
 export async function POST(req: Request) {

@@ -55,12 +55,6 @@ jobs:
               cache: ${{ steps.detect-package-manager.outputs.manager }}
          - name: Setup Pages
            uses: actions/configure-pages@v5
-           with:
-              # Automatically inject basePath in your Next.js configuration file and disable
-              # server side image optimization (https://nextjs.org/docs/api-reference/next/image#unoptimized).
-              #
-              # You may remove this line if you want to manage the configuration yourself.
-              static_site_generator: next
          - name: Restore cache
            uses: actions/cache@v4
            with:
@@ -78,15 +72,17 @@ jobs:
               TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL }}
               TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN }}
               NODE_ENV: production
-           run: ${{ steps.detect-package-manager.outputs.runner }} npm run generate-static-data
+              GITHUB_PAGES: true
+           run: npm run generate-static-data
          - name: Build with Next.js
            env:
+              GITHUB_PAGES: true
               NEXT_PUBLIC_NODE_ENV: ${{ vars.NEXT_PUBLIC_NODE_ENV }}
               NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }}
               NEXT_PUBLIC_ODOO_ACCESS_TOKEN: ${{ vars.NEXT_PUBLIC_ODOO_ACCESS_TOKEN }}
               STRIPE_SECRET_KEY: ${{ vars.STRIPE_SECRET_KEY }}
               STRIPE_METERED_PRICE_ID: ${{ vars.STRIPE_METERED_PRICE_ID }}
-           run: ${{ steps.detect-package-manager.outputs.runner }} next build
+           run: npx --no-install next build
          - name: Upload artifact
            uses: actions/upload-pages-artifact@v3
            with:

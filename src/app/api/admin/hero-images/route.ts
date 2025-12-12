@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+export const dynamic = 'force-static'
 import { db } from '@/lib/db'
 import { heroImages } from '@/lib/db/schema'
 import { desc } from 'drizzle-orm'

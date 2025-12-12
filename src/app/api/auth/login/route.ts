@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+export const dynamic = 'force-static'
 import { signIn } from '@/lib/auth'
 
 export async function POST(req: Request) {

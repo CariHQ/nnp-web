@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+export const dynamic = 'force-static'
 import Stripe from 'stripe'
 import { db } from '@/lib/db'
 import { stripePayments } from '@/lib/db/schema'

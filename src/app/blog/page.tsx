@@ -8,12 +8,18 @@ export default async function BlogPage() {
   let posts = []
   
   try {
-    // Order by publishedAt desc, but handle nulls by using createdAt as fallback
-    posts = await db
+    // Fetch all published posts, then sort in JavaScript to handle nulls
+    const allPosts = await db
       .select()
       .from(blogPosts)
       .where(eq(blogPosts.published, true))
-      .orderBy(desc(sql`COALESCE(${blogPosts.publishedAt}, ${blogPosts.createdAt})`))
+    
+    // Sort by publishedAt desc, fallback to createdAt if publishedAt is null
+    posts = allPosts.sort((a, b) => {
+      const aDate = a.publishedAt || a.createdAt
+      const bDate = b.publishedAt || b.createdAt
+      return (bDate || 0) - (aDate || 0)
+    })
   } catch (error) {
     console.error('Error fetching blog posts:', error)
     // Return empty array if query fails

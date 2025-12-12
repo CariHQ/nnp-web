@@ -26,6 +26,7 @@ export default async function PressPage() {
     })
   } catch (error) {
     console.error('Error fetching press releases:', error)
+    console.error('Error details:', error instanceof Error ? error.message : String(error))
     // Return empty array if query fails
     posts = []
   }
@@ -48,10 +49,11 @@ export default async function PressPage() {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-16">
+      <div className="container mx-auto px-4 py-16 relative z-10">
         {posts.length === 0 ? (
           <div className="text-center py-16">
             <p className="text-gray-500">No press releases yet. Check back soon!</p>
+            <p className="text-xs text-gray-400 mt-2">Debug: Found {posts.length} posts</p>
           </div>
         ) : (
           <div className="space-y-6">

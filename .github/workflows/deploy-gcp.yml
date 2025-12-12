@@ -79,7 +79,8 @@ jobs:
             --set-env-vars STRIPE_SECRET_KEY=${{ vars.STRIPE_SECRET_KEY }} \
             --set-env-vars STRIPE_WEBHOOK_SECRET=${{ secrets.STRIPE_WEBHOOK_SECRET }} \
             --set-env-vars STRIPE_METERED_PRICE_ID=${{ vars.STRIPE_METERED_PRICE_ID }} \
-            --set-env-vars AUTH_SECRET=${{ secrets.AUTH_SECRET }}
+            --set-env-vars AUTH_SECRET=${{ secrets.AUTH_SECRET }} \
+            --set-env-vars OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
 
       - name: Get Cloud Run URL
         run: |

@@ -124,6 +124,10 @@ export default function HeroImagesPage() {
                         alt={image.title}
                         fill
                         className="object-cover rounded"
+                        onError={(e) => {
+                          console.error('Image failed to load:', image.imageUrl)
+                          e.currentTarget.src = '/placeholder.jpg'
+                        }}
                       />
                     </div>
                     <div className="space-y-2 text-sm">

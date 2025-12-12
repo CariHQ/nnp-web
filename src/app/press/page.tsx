@@ -79,13 +79,18 @@ export default async function PressPage() {
                       )}
                       <div className="flex justify-between items-center text-xs text-gray-400 mt-auto pt-2">
                         {post.author && <span className="truncate">{post.author}</span>}
-                        {post.publishedAt && (
+                        {(post.publishedAt || post.createdAt) && (
                           <span className="ml-2 flex-shrink-0">
-                            {new Date(post.publishedAt instanceof Date ? post.publishedAt.getTime() : post.publishedAt * 1000).toLocaleDateString('en-US', {
-                              year: 'numeric',
-                              month: 'short',
-                              day: 'numeric',
-                            })}
+                            {(() => {
+                              const dateValue = post.publishedAt || post.createdAt
+                              if (!dateValue) return null
+                              const timestamp = dateValue instanceof Date ? dateValue.getTime() : dateValue * 1000
+                              return new Date(timestamp).toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                              })
+                            })()}
                           </span>
                         )}
                       </div>
